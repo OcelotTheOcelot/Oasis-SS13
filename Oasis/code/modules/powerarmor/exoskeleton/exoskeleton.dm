@@ -11,7 +11,7 @@
 
 	// Note: we use our own magic to render the exoskeleton
 	icon = null
-	alternate_worn_icon = null
+	alternate_worn_icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'
 	icon_state = ""
 	item_state = ""
 	var/exoskeleton_parts_icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'  // What we render when there's no part attached
@@ -23,7 +23,8 @@
 	density = TRUE
 
 	w_class = WEIGHT_CLASS_GIGANTIC
-	slowdown = EXOSKELETON_DEACTIVATED_SLOWDOWN
+	slowdown = 1
+	var/bare_slowdown = -0.2  // What slowdown does the bare exoskeleton have when activated
 
 	body_parts_covered = 0
 
@@ -37,11 +38,11 @@
 	var/additive_slowdown  // How much the attached parts should slow the user down
 	var/eqipment_delay = 0  // How much time it takes to equip the exoskeleton
 
-	var/list/parts = new // This list contains all the parts attached to the exoskeleton
-	var/list/exoskeleton_overlays = new // This list contains all the overlays to be rendered
+	var/list/parts = new  // This list contains all the parts attached to the exoskeleton
+	var/list/appearances = new  // This list contains all the overlays to be rendered, not to be mistaken with power_armor_overlays
+	var/list/power_armor_overlays = new  // This list contains list of sortable power_armor_overlay datums that is processed into appearances to be rendered 
 
-	var/disassemble_speed = 100 // How much time does it take to disassemble the exoskeleton
-
+	var/disassemble_speed = 100  // How much time does it take to disassemble the exoskeleton
 
 	var/mob/living/wearer  // Current wearer of the suit, prefer using 'user' parameter if possible
 	var/datum/action/innate/power_armor/exoskeleton_eject/eject_action  // A datum responsible for ejection from exosuit
@@ -58,7 +59,7 @@
 	ADD_TRAIT(src, TRAIT_NODROP, CLOTHING_TRAIT)
 	eject_action = new(src)
 	eject_action.exoskeleton = src
-	update_exoskeleton_overlays()
+	update_appearances()
 	update_icon()
 
 /obj/item/clothing/suit/armor/exoskeleton/examine(mob/user)
@@ -151,7 +152,7 @@ Accepts:
 Helper proc used to recalculate and update current slowdown.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/update_slowdown()
-	slowdown = (activated ? EXOSKELETON_ACTIVATED_SLOWDOWN : EXOSKELETON_DEACTIVATED_SLOWDOWN) + additive_slowdown
+	slowdown = (activated ? bare_slowdown : initial(slowdown)) + additive_slowdown
 
 /* Power
 Called when the cell is inserted.
@@ -193,14 +194,15 @@ Accepts:
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/attach_part(obj/item/power_armor_part/P)
 	parts[P.slot] = P
-	body_parts_covered |= P.body_parts_covered
 	P.exoskeleton = src
 
+	body_parts_covered |= P.body_parts_covered
+	power_armor_overlays |= P.power_armor_overlays
 	additive_slowdown += P.slowdown
 	eqipment_delay += P.eqipment_delay
 
 	update_slowdown()
-	update_exoskeleton_overlays()
+	update_appearances()
 	update_hand_offsets()
 	update_icon()
 
@@ -215,19 +217,20 @@ Accepts:
 		return
 	P.forceMove(get_turf(src))
 	parts -= slot
-	body_parts_covered &= ~P.body_parts_covered
 	P.exoskeleton = null
 
+	body_parts_covered &= ~P.body_parts_covered
+	power_armor_overlays -= P.power_armor_overlays
 	additive_slowdown -= P.slowdown
 	eqipment_delay -= P.eqipment_delay
 
 	update_slowdown()
-	update_exoskeleton_overlays()
+	update_appearances()
 	update_hand_offsets()
 	update_icon()
 
 /* Update hand offsets
-Updates the offsets for the icons of the held items to correspons the offsets of the arms attached.
+Updates the offsets for the icons of the held items to corresponds the offsets of the arms attached.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/update_hand_offsets()
 	// <TODO>
@@ -235,35 +238,33 @@ Updates the offsets for the icons of the held items to correspons the offsets of
 /obj/item/clothing/suit/armor/exoskeleton/update_icon()
 	..()
 	cut_overlays()
-	var/mutable_appearance/MA
-	for(MA in exoskeleton_overlays)
+	// Snowflake code to render the empty torso
+	var/obj/item/power_armor_part/torso/T = parts[EXOSKELETON_SLOT_TORSO]
+	if(istype(T) && T.uses_empty_state)
+		add_overlay(mutable_appearance(T.icon, "torso_empty"))
+	for(var/mutable_appearance/MA in appearances)
 		add_overlay(MA)
 
 /obj/item/clothing/suit/armor/exoskeleton/worn_overlays(isinhands = FALSE)
 	. = ..()
-	. |= exoskeleton_overlays
+	. |= appearances
 
-/* Update exoskeleton overlays
-Updates the schedule of icons to be rendered over the user of the exoskeleton and applies the according overlay.
+/* Update appearances
+Updates the schedule of mutable_appearances to be rendered over the exoskeleton.
+The mutable_appearance's are extracted from power_armor_overlays.
 */
-/obj/item/clothing/suit/armor/exoskeleton/proc/update_exoskeleton_overlays()
-	exoskeleton_overlays = list()
-
+/obj/item/clothing/suit/armor/exoskeleton/proc/update_appearances()
+	appearances = list()
+	// We need to sort the attached parts before we render them, hence the additional loop.
+	for(var/datum/power_armor_overlay/PAO in sortTim(power_armor_overlays, cmp=/proc/cmp_power_armor_overlays_render_order, associative = FALSE))
+		appearances += PAO.appearance
+	// If there was no part attached, we render the bare exoskeleton
 	var/part_slot
 	for(part_slot in (exoskeleton_parts - parts))
 		var/part_icon_state = exoskeleton_parts[part_slot]
 		if(part_slot == EXOSKELETON_SLOT_TORSO && panel_opened)
 			part_icon_state = "torso_opened"
-		exoskeleton_overlays += mutable_appearance(exoskeleton_parts_icon, part_icon_state)
-	// We need to sort the attached parts before we render them, hence the additional loop.
-	for(part_slot in sortTim(parts, cmp=/proc/cmp_parts_render_order, associative=TRUE))
-		var/obj/item/power_armor_part/P = parts[part_slot]
-		exoskeleton_overlays += mutable_appearance(P.icon, P.part_icon_state)
-		var/module_slot
-		for(module_slot in P.modules)
-			var/obj/item/power_armor_module/M = P.modules[module_slot]
-			if(istype(M))
-				exoskeleton_overlays += mutable_appearance(M.icon, part_slot)
+		appearances += mutable_appearance(exoskeleton_parts_icon, part_icon_state)
 
 /* Disassemble
 Deletes the exoskeleton and spawns its disassembled version.
@@ -350,7 +351,7 @@ Accepts:
 	else if(W.tool_behaviour == TOOL_SCREWDRIVER)
 		if(bare)
 			panel_opened = !panel_opened
-			update_exoskeleton_overlays()
+			update_appearances()
 			update_icon()
 			to_chat(user, "<span class='notice'>You [panel_opened ? "open" : "close"] the maintenance panel.</span>")
 			playsound(src.loc, 'sound/machines/click.ogg', 50, 1)

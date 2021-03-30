@@ -12,6 +12,9 @@
 	var/obj/item/held_item_type  // If specified, the module prevents using bare hands when attached, placing item of the given type in the wearer's hands; generally used by modules for arms
 	var/obj/item/held_item  // The representation of the item in the wearer's inventory
 
+	var/list/power_armor_overlays = new  // Overlays to render when the module is attached as an associative list with part slots as keys and /datum/power_armor_overlay objects as values
+	var/render_priority  // The appearence of the default overlay
+
 	var/list/module_actions = new  // List of actions that this module provides
 
 /obj/item/power_armor_module/examine(mob/user)
@@ -30,6 +33,35 @@
 	for(var/datum/action/innate/power_armor/module/A in create_module_actions())
 		A.module = src
 		actions += A
+
+/* Get overlays for part slot
+This proc is used to get matching overlays for parts, e.g. r_arm icon state for right arms.
+Not recommended to be overriden.
+Accepts:
+	slot, the slot of the part the module will be rendered at
+Returns:
+	datum/power_armor_overlay object containing the according mutable_appearance
+*/
+/obj/item/power_armor_module/proc/get_overlays_for_part_slot(slot)
+	if(!power_armor_overlays[slot])
+		power_armor_overlays[slot] = create_overlays_for_part_slot(slot)
+	return power_armor_overlays[slot]
+
+/* Create overlays for part slot
+This Proc is used to create matching overlays for parts, e.g. r_arm icon state for right arms.
+Can be overriden.
+Accepts:
+	slot, the slot of the part the module will be rendered at
+Returns:
+	datum/power_armor_overlay object containing the according mutable_appearance
+*/
+/obj/item/power_armor_module/proc/create_overlays_for_part_slot(slot)
+	. = list()
+	var/datum/power_armor_overlay/PAO = new
+	PAO.priority = render_priority
+	PAO.appearance = mutable_appearance(icon, slot)
+	. += PAO
+	return .
 
 /* Create module actions
 Helper proc added for simplicity of module actions modification.

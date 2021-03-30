@@ -1,3 +1,4 @@
+// <WARNING! IT'S NOT IMPLEMENTED YET!!!>
 /* Intercept damage
 Checks if the limb has power armor part covering it. If it has, applies damage to the part.
 Accepts:

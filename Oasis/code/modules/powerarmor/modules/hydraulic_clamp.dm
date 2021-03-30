@@ -5,6 +5,7 @@
 	slot = MODULE_SLOT_ARM
 	locks_hand = TRUE
 	held_item_type = /obj/item/hydraulic_clamp
+	render_priority = POWER_ARMOR_LAYER_ARM_MODULES
 
 /obj/item/power_armor_module/hydraulic_clamp/can_be_attached(obj/item/power_armor_part/part)
 	if(istype(part, /obj/item/power_armor_part/l_arm/p5000pwl) || istype(part, /obj/item/power_armor_part/r_arm/p5000pwl))
