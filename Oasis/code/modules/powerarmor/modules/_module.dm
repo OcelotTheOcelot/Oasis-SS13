@@ -1,6 +1,7 @@
 /obj/item/power_armor_module
 	name = "power armor module"
 	icon_state = "module_item"
+	w_class = WEIGHT_CLASS_NORMAL
 
 	var/tier = POWER_ARMOR_GRADE_BASIC  // The tier of the module, needed for balance
 	
@@ -12,7 +13,9 @@
 	var/obj/item/held_item_type  // If specified, the module prevents using bare hands when attached, placing item of the given type in the wearer's hands; generally used by modules for arms
 	var/obj/item/held_item  // The representation of the item in the wearer's inventory
 
-	var/list/power_armor_overlays = new  // Overlays to render when the module is attached as an associative list with part slots as keys and /datum/power_armor_overlay objects as values
+	// Overlays to render when the module is attached.
+	// Represented by an associative list with part slots as keys and /datum/power_armor_overlay objects as values.
+	var/list/power_armor_overlays = new
 	var/render_priority  // The appearence of the default overlay
 
 	var/list/module_actions = new  // List of actions that this module provides
@@ -32,20 +35,36 @@
 		held_item.forceMove(src)
 	for(var/datum/action/innate/power_armor/module/A in create_module_actions())
 		A.module = src
-		actions += A
+		module_actions += A
+
+/obj/item/power_armor_module/Destroy()
+	remove_actions()
+	for(var/datum/action/innate/power_armor/module/A in module_actions)
+		QDEL_NULL(A)
+	for(var/part_slot in power_armor_overlays)
+		if(power_armor_overlays[part_slot])
+			QDEL_NULL(power_armor_overlays[part_slot])
+	..()
+
+/* EMP reaction
+Called when the exoskeleton is getting EMPed.
+*/
+/obj/item/power_armor_module/proc/emp_reaction()
+	return
+
 
 /* Get overlays for part slot
 This proc is used to get matching overlays for parts, e.g. r_arm icon state for right arms.
 Not recommended to be overriden.
 Accepts:
-	slot, the slot of the part the module will be rendered at
+	part_slot, the slot of the part the module will be rendered at
 Returns:
 	datum/power_armor_overlay object containing the according mutable_appearance
 */
-/obj/item/power_armor_module/proc/get_overlays_for_part_slot(slot)
-	if(!power_armor_overlays[slot])
-		power_armor_overlays[slot] = create_overlays_for_part_slot(slot)
-	return power_armor_overlays[slot]
+/obj/item/power_armor_module/proc/get_overlays_for_part_slot(part_slot)
+	if(!power_armor_overlays[part_slot])
+		power_armor_overlays[part_slot] = create_overlays_for_part_slot(part_slot)
+	return power_armor_overlays[part_slot]
 
 /* Create overlays for part slot
 This Proc is used to create matching overlays for parts, e.g. r_arm icon state for right arms.
@@ -55,11 +74,11 @@ Accepts:
 Returns:
 	datum/power_armor_overlay object containing the according mutable_appearance
 */
-/obj/item/power_armor_module/proc/create_overlays_for_part_slot(slot)
+/obj/item/power_armor_module/proc/create_overlays_for_part_slot(part_slot)
 	. = list()
 	var/datum/power_armor_overlay/PAO = new
 	PAO.priority = render_priority
-	PAO.appearance = mutable_appearance(icon, slot)
+	PAO.appearance = mutable_appearance(icon, part_slot)
 	. += PAO
 	return .
 
@@ -71,8 +90,8 @@ Returns:
 	list of /datum/action/innate/power_armor/module/
 */
 /obj/item/power_armor_module/proc/create_module_actions()
-	var/list/actions = new
-	return actions
+	var/list/created_actions = new
+	return created_actions
 
 /* Can be attached
 Checks if the module can be attached to the part.
@@ -124,8 +143,7 @@ Grants all actions of the module to the wearer.
 /obj/item/power_armor_module/proc/grant_actions()
 	if(!(part && part.exoskeleton && part.exoskeleton.wearer))
 		return
-	var/datum/action/innate/power_armor/module/A
-	for(A in actions)
+	for(var/datum/action/innate/power_armor/module/A in module_actions)
 		A.Grant(part.exoskeleton.wearer)
 
 /* Remove actions
@@ -134,8 +152,7 @@ Removes all actions of the module from the wearer.
 /obj/item/power_armor_module/proc/remove_actions()
 	if(!(part && part.exoskeleton && part.exoskeleton.wearer))
 		return
-	var/datum/action/innate/power_armor/module/A
-	for(A in actions)
+	for(var/datum/action/innate/power_armor/module/A in module_actions)
 		A.Remove(part.exoskeleton.wearer)
 
 /* On wearer entered

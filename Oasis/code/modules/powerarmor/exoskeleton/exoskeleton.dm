@@ -1,6 +1,6 @@
 /* Power armor system by
 	NDOcelot (#4852) (spriting and coding),
-	TotyalyNotC (spriting)
+	TottalyNotC (spriting)
 	and
 	NDHavch1k (spriting)
 */
@@ -99,10 +99,10 @@
 		toggle_offset(user, TRUE)
 		dir = SOUTH
 
-		eject_action.Grant(user, src)
+		if(eject_action)
+			eject_action.Grant(user, src)
 		ADD_TRAIT(user, TRAIT_EXOSKELETON, CLOTHING_TRAIT)
-		var/P
-		for(P in parts)
+		for(var/P in parts)
 			parts[P].on_wearer_entered(user)
 
 		if(powered && !activated)
@@ -113,18 +113,21 @@
 			to_chat(user, "<span class='warning'>Your limbs can hardly move in this unpowered [src]...</span>")
 		else
 			to_chat(user, "<span class='notice'>It's kinda difficult to move in this bulky suit...</span>")
+
 		// if user.has_trauma_type ... <TODO> paraplegic people should gain ability to walk using this
 
 /obj/item/clothing/suit/armor/exoskeleton/dropped(mob/living/user)
 	if(is_equipped(user))
-		wearer = null
+		for(var/P in parts)
+			parts[P].on_wearer_left(user)
+
+		if(eject_action)
+			eject_action.Remove(user)
+
 		toggle_offset(user, FALSE)
 
-		eject_action.Remove(user)
 		REMOVE_TRAIT(user, TRAIT_EXOSKELETON, CLOTHING_TRAIT)
-		var/P
-		for(P in parts)
-			parts[P].on_wearer_left(user)
+		wearer = null
 
 		if(activated)
 			deactivate()
@@ -140,6 +143,8 @@ Accepts:
 	user, the wearer of the exoskeleton whose offsets are being tweaked.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/toggle_offset(mob/living/carbon/user, equipped=FALSE)
+	if(!istype(user))
+		return
 	if(equipped)
 		user.pixel_y += EXOSKELETON_ADDITIONAL_HEIGHT
 		worn_y_dimension -= 2 * EXOSKELETON_ADDITIONAL_HEIGHT
@@ -242,6 +247,7 @@ Updates the offsets for the icons of the held items to corresponds the offsets o
 	var/obj/item/power_armor_part/torso/T = parts[EXOSKELETON_SLOT_TORSO]
 	if(istype(T) && T.uses_empty_state)
 		add_overlay(mutable_appearance(T.icon, "torso_empty"))
+
 	for(var/mutable_appearance/MA in appearances)
 		add_overlay(MA)
 
@@ -320,6 +326,7 @@ Accepts:
 
 /obj/item/clothing/suit/armor/exoskeleton/MouseDrop_T(mob/M, mob/living/carbon/human/user)
 	if(!istype(user))
+		to_chat(user, "<span class='warning'>\The [src] is designed to be worn by humanlike lifeforms only!</span>")
 		return
 	if(user.wear_suit)
 		to_chat(user, "<span class='warning'>You already have a suit equipped!</span>")

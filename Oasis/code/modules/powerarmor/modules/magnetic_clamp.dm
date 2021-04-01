@@ -11,6 +11,7 @@
 /obj/item/power_armor_module/magnetic_clamp/create_module_actions()
 	. = ..()
 	. += new /datum/action/innate/power_armor/module/deploy_tool
+	return .
 
 /obj/item/magnetic_clamp
 	name = "magnetic clamp"

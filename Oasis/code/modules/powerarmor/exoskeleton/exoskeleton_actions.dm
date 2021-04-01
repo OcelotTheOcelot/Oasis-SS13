@@ -1,6 +1,6 @@
 /datum/action/innate/power_armor
 	name = "Exoskeleton or power armor action"
-	icon_icon = 'Oasis/icons/powerarmor/exoskeleton_actions.dmi'
+	icon_icon = 'Oasis/icons/powerarmor/actions.dmi'
 	// action_background_icon_state = "bg_tech_blue_on"  // <TODO>
 
 	var/obj/item/clothing/suit/armor/exoskeleton/exoskeleton  // The exoskeleton this action is bound to
