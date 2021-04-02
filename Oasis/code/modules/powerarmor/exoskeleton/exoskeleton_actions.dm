@@ -36,7 +36,9 @@
 	name = "Toggle tools"
 
 /datum/action/innate/power_armor/module/deploy_tool/Activate()
+	if(!module)
+		return
 	if(module.hand_occupied)
-		module.occupy_hand()
-	else
 		module.free_hand()
+	else
+		module.occupy_hand()

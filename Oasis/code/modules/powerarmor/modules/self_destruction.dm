@@ -38,7 +38,8 @@
 Makes the module go boom
 */
 /obj/item/power_armor_module/self_destruction/proc/trigger()
-	visible_message("<span class='boldwarning'>Warning: self-destruction sequence has been initiated!</span>")
+	if(part && part.exoskeleton)
+		part.exoskeleton.visible_message("<span class='boldwarning'>Warning: self-destruction sequence has been initiated!</span>")
 	explosion(loc, 1, 2, 4, 3,
 		adminlog = TRUE,
 		ignorecap = FALSE,

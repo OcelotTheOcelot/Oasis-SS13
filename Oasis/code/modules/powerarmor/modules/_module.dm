@@ -31,7 +31,7 @@
 /obj/item/power_armor_module/Initialize()
 	..()
 	if(held_item_type)
-		held_item = new held_item_type()
+		held_item = new held_item_type(loc)
 		held_item.forceMove(src)
 	for(var/datum/action/innate/power_armor/module/A in create_module_actions())
 		A.module = src
@@ -90,8 +90,7 @@ Returns:
 	list of /datum/action/innate/power_armor/module/
 */
 /obj/item/power_armor_module/proc/create_module_actions()
-	var/list/created_actions = new
-	return created_actions
+	return list()
 
 /* Can be attached
 Checks if the module can be attached to the part.
@@ -105,8 +104,10 @@ Returns:
 
 /* Occupy hand
 If held_item_type is specified, puts an item of held_item_type to the wearer's occupied hand.
+Accepts:
+	forced, if set to TRUE will cause currently held item to be dropped on the floor, otherwise won't occupy hand in case it was already occupied.
 */
-/obj/item/power_armor_module/proc/occupy_hand()
+/obj/item/power_armor_module/proc/occupy_hand(forced = FALSE)
 	if(!held_item_type)
 		return
 	if(!(part && part.exoskeleton && part.exoskeleton.wearer))
@@ -116,8 +117,11 @@ If held_item_type is specified, puts an item of held_item_type to the wearer's o
 		return
 	var/hand_index = part.slot == EXOSKELETON_SLOT_L_ARM ? 1 : 2  // Really, there is no macros for hand indexes?
 	if(H.get_item_for_held_index(hand_index) != null)
-		H.dropItemToGround(H.get_item_for_held_index(hand_index), force = TRUE)
-	hand_occupied = FALSE
+		if(forced)
+			H.dropItemToGround(H.get_item_for_held_index(hand_index), force = TRUE)
+		else
+			return
+	hand_occupied = TRUE
 	H.put_in_hand(held_item, hand_index, forced = TRUE)
 	H.update_inv_hands()
 
@@ -163,7 +167,7 @@ Accepts:
 */
 /obj/item/power_armor_module/proc/on_wearer_entered(mob/user)
 	if(locks_hand)  // Otherwise we let the wearer to deploy the tool manually
-		occupy_hand()
+		occupy_hand(TRUE)
 	grant_actions()
 
 /* On wearer left

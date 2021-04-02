@@ -1,9 +1,4 @@
-/* Power armor system by
-	NDOcelot (#4852) (spriting and coding),
-	TottalyNotC (spriting)
-	and
-	NDHavch1k (spriting)
-*/
+/* Power armor system by NDOcelot (#4852) (spriting and coding) and TottalyNotC (spriting) */
 
 /obj/item/clothing/suit/armor/exoskeleton
 	name = "exoskeleton"
@@ -46,21 +41,46 @@
 
 	var/mob/living/wearer  // Current wearer of the suit, prefer using 'user' parameter if possible
 	var/datum/action/innate/power_armor/exoskeleton_eject/eject_action  // A datum responsible for ejection from exosuit
-	var/static/exoskeleton_parts = list(
-		EXOSKELETON_SLOT_TORSO = "torso",
-		EXOSKELETON_SLOT_L_ARM = "l_arm",
-		EXOSKELETON_SLOT_R_ARM = "r_arm",
-		EXOSKELETON_SLOT_L_LEG = "l_leg",
-		EXOSKELETON_SLOT_R_LEG = "r_leg"
-	)
+	var/list/exoskeleton_overlays = new  // An associative list containing appearances of the parts to be rendered when there's no part attached.
 
 /obj/item/clothing/suit/armor/exoskeleton/Initialize()
 	. = ..()
+	initialize_exoskeleton_overlays()
 	ADD_TRAIT(src, TRAIT_NODROP, CLOTHING_TRAIT)
 	eject_action = new(src)
 	eject_action.exoskeleton = src
 	update_appearances()
 	update_icon()
+
+/* Initialize exoskeleton overlays
+Fills the exoskeleton_overlays list.
+Couldn't be implemented with for loop because of different render layers.
+*/
+/obj/item/clothing/suit/armor/exoskeleton/proc/initialize_exoskeleton_overlays()
+	var/datum/power_armor_overlay/PAO = new
+	PAO.priority = POWER_ARMOR_LAYER_TORSO
+	PAO.appearance = mutable_appearance(exoskeleton_parts_icon, "torso")
+	exoskeleton_overlays[EXOSKELETON_SLOT_TORSO] += PAO
+	PAO = new
+	PAO.priority = POWER_ARMOR_LAYER_TORSO
+	PAO.appearance = mutable_appearance(exoskeleton_parts_icon, "torso_opened")
+	exoskeleton_overlays["torso_opened"] += PAO
+	PAO = new
+	PAO.priority = POWER_ARMOR_LAYER_ARMS
+	PAO.appearance = mutable_appearance(exoskeleton_parts_icon, "l_arm")
+	exoskeleton_overlays[EXOSKELETON_SLOT_L_ARM] += PAO
+	PAO = new
+	PAO.priority = POWER_ARMOR_LAYER_ARMS
+	PAO.appearance = mutable_appearance(exoskeleton_parts_icon, "r_arm")
+	exoskeleton_overlays[EXOSKELETON_SLOT_R_ARM] += PAO
+	PAO = new
+	PAO.priority = POWER_ARMOR_LAYER_LEGS
+	PAO.appearance = mutable_appearance(exoskeleton_parts_icon, "l_leg")
+	exoskeleton_overlays[EXOSKELETON_SLOT_L_LEG] += PAO
+	PAO = new
+	PAO.priority = POWER_ARMOR_LAYER_LEGS
+	PAO.appearance = mutable_appearance(exoskeleton_parts_icon, "r_leg")
+	exoskeleton_overlays[EXOSKELETON_SLOT_R_LEG] += PAO
 
 /obj/item/clothing/suit/armor/exoskeleton/examine(mob/user)
 	. = ..()
@@ -125,6 +145,12 @@
 			eject_action.Remove(user)
 
 		toggle_offset(user, FALSE)
+		var/obj/item/clothing/head/helmet/power_armor/helmet = user.get_item_by_slot(ITEM_SLOT_HEAD)
+		if(istype(helmet))
+			user.dropItemToGround(helmet)
+			to_chat(user, "<span class='boldwarning'>DEBUG: Droppin [helmet]!</span>")  // <TODO>
+		else
+			to_chat(user, "<span class='boldwarning'>DEBUG: [helmet] is not a PA helm!</span>")
 
 		REMOVE_TRAIT(user, TRAIT_EXOSKELETON, CLOTHING_TRAIT)
 		wearer = null
@@ -261,16 +287,16 @@ The mutable_appearance's are extracted from power_armor_overlays.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/update_appearances()
 	appearances = list()
-	// We need to sort the attached parts before we render them, hence the additional loop.
-	for(var/datum/power_armor_overlay/PAO in sortTim(power_armor_overlays, cmp=/proc/cmp_power_armor_overlays_render_order, associative = FALSE))
-		appearances += PAO.appearance
-	// If there was no part attached, we render the bare exoskeleton
-	var/part_slot
-	for(part_slot in (exoskeleton_parts - parts))
-		var/part_icon_state = exoskeleton_parts[part_slot]
+
+	var/list/overlays_to_render = power_armor_overlays
+	// Ikr this is not the most exemplary piece of code
+	for(var/part_slot in (exoskeleton_overlays - parts - "torso_opened"))
 		if(part_slot == EXOSKELETON_SLOT_TORSO && panel_opened)
-			part_icon_state = "torso_opened"
-		appearances += mutable_appearance(exoskeleton_parts_icon, part_icon_state)
+			overlays_to_render += exoskeleton_overlays["torso_opened"]
+			continue
+		overlays_to_render += exoskeleton_overlays[part_slot]
+	for(var/datum/power_armor_overlay/PAO in sortTim(overlays_to_render, cmp=/proc/cmp_power_armor_overlays_render_order, associative = FALSE))
+		appearances += PAO.appearance
 
 /* Disassemble
 Deletes the exoskeleton and spawns its disassembled version.

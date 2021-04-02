@@ -2,7 +2,7 @@
 	name = "hydraulic clamp module"
 	desc = "A powerful hydraulic clamp capable of carrying heavy loads. Can only be installed on p5000pwl arm."
 	icon = 'Oasis/icons/powerarmor/modules/hydraulic_clamp.dmi'
-	slot = MODULE_SLOT_ARM
+	slot = MODULE_SLOT_ARM_ALT
 	locks_hand = TRUE
 	held_item_type = /obj/item/hydraulic_clamp
 	render_priority = POWER_ARMOR_LAYER_ARM_MODULES

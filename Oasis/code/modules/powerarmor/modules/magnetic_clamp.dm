@@ -5,7 +5,7 @@
 	slot = MODULE_SLOT_ARM
 	locks_hand = FALSE
 	held_item_type = /obj/item/hydraulic_clamp
-	// tier = POWER_ARMOR_GRADE_ADVANCED
+	tier = POWER_ARMOR_GRADE_ADVANCED
 	render_priority = POWER_ARMOR_LAYER_ARM_MODULES
 
 /obj/item/power_armor_module/magnetic_clamp/create_module_actions()
