@@ -33,6 +33,7 @@
 	if(held_item_type)
 		held_item = new held_item_type(loc)
 		held_item.forceMove(src)
+		held_item.AddComponent(/datum/component/power_armor_item, src)
 	for(var/datum/action/innate/power_armor/module/A in create_module_actions())
 		A.module = src
 		module_actions += A
