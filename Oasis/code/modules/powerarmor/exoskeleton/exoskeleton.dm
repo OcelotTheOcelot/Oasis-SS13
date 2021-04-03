@@ -64,7 +64,7 @@ Couldn't be implemented with for loop because of different render layers.
 	PAO = new
 	PAO.priority = POWER_ARMOR_LAYER_TORSO
 	PAO.appearance = mutable_appearance(exoskeleton_parts_icon, "torso_opened")
-	exoskeleton_overlays["torso_opened"] += PAO
+	exoskeleton_overlays["[EXOSKELETON_SLOT_TORSO]_opened"] += PAO
 	PAO = new
 	PAO.priority = POWER_ARMOR_LAYER_ARMS
 	PAO.appearance = mutable_appearance(exoskeleton_parts_icon, "l_arm")
@@ -146,11 +146,12 @@ Couldn't be implemented with for loop because of different render layers.
 
 		toggle_offset(user, FALSE)
 		var/obj/item/clothing/head/helmet/power_armor/helmet = user.get_item_by_slot(ITEM_SLOT_HEAD)
+		to_chat(user, "<span class='boldwarning'>DEBUG: We received [user.get_item_by_slot(ITEM_SLOT_HEAD)]</span>")  // <TODO>
 		if(istype(helmet))
 			user.dropItemToGround(helmet)
 			to_chat(user, "<span class='boldwarning'>DEBUG: Droppin [helmet]!</span>")  // <TODO>
 		else
-			to_chat(user, "<span class='boldwarning'>DEBUG: [helmet] is not a PA helm!</span>")
+			to_chat(user, "<span class='boldwarning'>DEBUG: [helmet] is not a PA helm!</span>")  // <TODO>
 
 		REMOVE_TRAIT(user, TRAIT_EXOSKELETON, CLOTHING_TRAIT)
 		wearer = null
@@ -288,11 +289,12 @@ The mutable_appearance's are extracted from power_armor_overlays.
 /obj/item/clothing/suit/armor/exoskeleton/proc/update_appearances()
 	appearances = list()
 
-	var/list/overlays_to_render = power_armor_overlays
+	var/list/overlays_to_render = new
+	overlays_to_render |= power_armor_overlays
 	// Ikr this is not the most exemplary piece of code
-	for(var/part_slot in (exoskeleton_overlays - parts - "torso_opened"))
+	for(var/part_slot in (exoskeleton_overlays - parts - "[EXOSKELETON_SLOT_TORSO]_opened"))
 		if(part_slot == EXOSKELETON_SLOT_TORSO && panel_opened)
-			overlays_to_render += exoskeleton_overlays["torso_opened"]
+			overlays_to_render += exoskeleton_overlays["[EXOSKELETON_SLOT_TORSO]_opened"]
 			continue
 		overlays_to_render += exoskeleton_overlays[part_slot]
 	for(var/datum/power_armor_overlay/PAO in sortTim(overlays_to_render, cmp=/proc/cmp_power_armor_overlays_render_order, associative = FALSE))
