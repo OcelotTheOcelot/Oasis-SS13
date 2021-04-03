@@ -3,6 +3,7 @@
 /obj/item/clothing/suit/armor/exoskeleton
 	name = "exoskeleton"
 	desc = "A complex system of servo-motors designed to support its wearer."
+	// move_sound = list('sound/effects/servostep.ogg')
 
 	// Note: we use our own magic to render the exoskeleton
 	icon = null

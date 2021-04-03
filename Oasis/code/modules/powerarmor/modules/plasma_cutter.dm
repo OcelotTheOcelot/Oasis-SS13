@@ -24,6 +24,8 @@
 	desc = "A deployable plasma cutter that uses the exoskeleton's energy."
 	icon = 'Oasis/icons/powerarmor/modules/plasma_cutter.dmi'
 	icon_state = "held_item"
+	lefthand_file = 'Oasis/icons/powerarmor/modules/in_hands/module_items_lefthand.dmi'
+	righthand_file = 'Oasis/icons/powerarmor/modules/in_hands/module_items_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
 	force = 8
 	throwforce = 0
@@ -37,7 +39,7 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, TRAIT_POWER_ARMOR)
 
-/obj/item/gun/energy/plasmacutter/power_armor_module/recharge_newshot(no_cyborg_drain)
+/obj/item/gun/energy/plasmacutter/power_armor_module/recharge_newshot()
 	if (!ammo_type || !cell)
 		return
 	var/datum/component/power_armor_item/PAI = GetComponent(/datum/component/power_armor_item)
@@ -50,8 +52,5 @@
 	if(!shot)
 		return
 	if(C.use(shot.e_cost))
-		to_chat(loc, "<span class='notice'>[C]: [C && C.charge];</span>")
-		to_chat(loc, "<span class='notice'>[cell]: [cell && cell.charge];</span>")
-		to_chat(loc, "<span class='notice'>[shot.e_cost];</span>")
 		cell.give(shot.e_cost)
 	..()
