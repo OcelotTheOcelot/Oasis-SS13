@@ -10,8 +10,9 @@
 	icon_state = ""
 	item_state = ""
 	var/exoskeleton_parts_icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'  // What we render when there's no part attached
+	layer = BELOW_MOB_LAYER
 
-	// move_sound = list('sound/effects/servostep.ogg')  // I'm quite surprised this can't be inherited from the class in _suit.dm
+	move_sound = list('sound/effects/servostep.ogg')
 
 	strip_delay = 100
 	equip_delay_other = 80
@@ -354,19 +355,33 @@ Accepts:
 			to_chat(user, "<span class='warning'>There is no power cell in \the [src]!</span>")
 	return attack_animal(user)  // Thus we prohibit humans from picking the suit up in their hands
 
-/obj/item/clothing/suit/armor/exoskeleton/MouseDrop_T(mob/M, mob/living/carbon/human/user)
+/obj/item/clothing/suit/armor/exoskeleton/MouseDrop_T(mob/living/carbon/human/M, mob/living/user)
 	if(!istype(user))
+		return
+	if(!istype(M))
 		to_chat(user, "<span class='warning'>\The [src] is designed to be worn by humanlike lifeforms only!</span>")
 		return
-	if(user.wear_suit)
-		to_chat(user, "<span class='warning'>You already have a suit equipped!</span>")
+	if(M.wear_suit)
+		if(M == user)
+			to_chat(user, "<span class='warning'>You already have a suit equipped!</span>")
+		else
+			user.visible_message(
+				"<span class='warning'>[user] attempts to put [M] into \the [src], but they already have a suit equipped!</span>",
+				"<span class='warning'>You attempt to put [M] into \the [src], but they already have a suit equipped!</span>"
+			)
 		return
-	to_chat(user, "<span class='notice'>You begin entering \the [src]...</span>")
-	if(do_after(user, eqipment_delay, target = src))
-		user.loc = loc
-		user.dir = dir
+	if(M == user)
+		to_chat(user, "<span class='notice'>You begin entering \the [src]...</span>")
+	else
+		user.visible_message(
+			"<span class='warning'>[user] attempts to put [M] into \the [src]!</span>",
+			"<span class='warning'>You attempt to put [M] into \the [src]!</span>"
+		)
+	if(do_after(M, eqipment_delay, target = src))
+		M.loc = loc  // I just hope you can't enter an already worn suit by any means... <TODO> investigate this 
+		M.dir = dir
 		sleep(1)  // This simply prevents the suit transfering animation from being noticeable
-		user.equip_to_slot_if_possible(src, ITEM_SLOT_OCLOTHING)
+		M.equip_to_slot_if_possible(src, ITEM_SLOT_OCLOTHING)
 
 /obj/item/clothing/suit/armor/exoskeleton/attackby(obj/item/W, mob/user, params)
 	var/equipped = is_equipped(user)
