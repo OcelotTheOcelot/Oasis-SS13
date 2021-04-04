@@ -14,8 +14,13 @@
 	new /obj/item/clothing/suit/armor/exoskeleton/advanced(loc)
 	new /obj/item/clothing/suit/armor/exoskeleton/military(loc)
 
-	new /obj/item/power_armor_module/plasma_cutter(loc)
-
-	new /obj/item/power_armor_part/l_arm/cherub(loc)
+	// new /obj/item/power_armor_module/plasma_cutter(loc)
+	new /obj/item/power_armor_part/l_arm/p5000pwl(loc)
+	new /obj/item/power_armor_part/r_arm/p5000pwl(loc)
+	new /obj/item/power_armor_part/torso/p5000pwl(loc)
+	new /obj/item/power_armor_part/l_leg/p5000pwl(loc)
+	new /obj/item/power_armor_part/r_leg/p5000pwl(loc)
+	
+	new /obj/item/power_armor_module/hydraulic_clamp(loc)
 
 	QDEL_NULL(src)
