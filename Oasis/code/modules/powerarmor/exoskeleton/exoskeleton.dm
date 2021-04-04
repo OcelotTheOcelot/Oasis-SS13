@@ -3,7 +3,6 @@
 /obj/item/clothing/suit/armor/exoskeleton
 	name = "exoskeleton"
 	desc = "A complex system of servo-motors designed to support its wearer."
-	// move_sound = list('sound/effects/servostep.ogg')
 
 	// Note: we use our own magic to render the exoskeleton
 	icon = null
@@ -11,6 +10,8 @@
 	icon_state = ""
 	item_state = ""
 	var/exoskeleton_parts_icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'  // What we render when there's no part attached
+
+	// move_sound = list('sound/effects/servostep.ogg')  // I'm quite surprised this can't be inherited from the class in _suit.dm
 
 	strip_delay = 100
 	equip_delay_other = 80
@@ -385,14 +386,15 @@ Accepts:
 				power()
 
 	else if(W.tool_behaviour == TOOL_SCREWDRIVER)
-		if(bare)
+		var/selected_part_slot = zone_to_exoskeleton_slot(user.zone_selected)
+		var/obj/item/power_armor_part/part = parts[selected_part_slot]
+		if((selected_part_slot == EXOSKELETON_SLOT_TORSO) && !istype(part))
 			panel_opened = !panel_opened
 			update_appearances()
 			update_icon()
 			to_chat(user, "<span class='notice'>You [panel_opened ? "open" : "close"] the maintenance panel.</span>")
 			playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
 		else
-			var/obj/item/power_armor_part/part = parts[zone_to_exoskeleton_slot(user.zone_selected)]
 			if(part)
 				if (part.modules.len <= 0)
 					to_chat(user, "<span class='notice'>\The [part] has no modules installed!</span>")
