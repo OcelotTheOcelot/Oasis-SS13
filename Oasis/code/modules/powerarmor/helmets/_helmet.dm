@@ -16,7 +16,7 @@
 	var/obj/item/clothing/suit/armor/exoskeleton/E = H.wear_suit
 	if(!istype(E))
 		if(!disable_warning)
-			to_chat(M, "<span class='warning'>It's unsafe for you neck to wear this helmet without any additional support!</span>")
+			to_chat(M, "<span class='warning'>It's unsafe for your neck to wear this helmet without any additional support!</span>")
 		return FALSE
 	if(E.tier < tier)
 		if(!disable_warning)
