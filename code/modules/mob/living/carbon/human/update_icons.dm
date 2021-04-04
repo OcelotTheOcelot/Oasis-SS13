@@ -374,6 +374,10 @@ There are several things that need to be remembered:
 
 	apply_overlay(SUIT_LAYER)
 
+	/* Since power armor uses the same slot, it would be quite convenient to just call this proc sequentially
+	instead of adding it as another "update_inv_wear..." */
+	update_inv_wear_power_armor()
+
 
 /mob/living/carbon/human/update_inv_pockets()
 	if(client && hud_used)
@@ -396,6 +400,37 @@ There are several things that need to be remembered:
 			if(hud_used.hud_shown)
 				client.screen += r_store
 			update_observer_view(r_store)
+
+
+/* I didn't want to mess up the perfectly written code above with my poorly structured stuff, so I decided to copy the code.
+We have to treat the power armor as a special snowflake because we render it above all the layers,
+but adding this to the update_inv_wear_suit() would cause much more maintability troubles than duplicating code like this.
+	– Relying on your understanding, Ocelot.
+*/
+/mob/living/carbon/human/proc/update_inv_wear_power_armor()
+	remove_overlay(POWER_ARMOR_LAYER)
+
+	if(client && hud_used)
+		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[TOBITSHIFT(ITEM_SLOT_OCLOTHING) + 1]
+		inv.update_icon()
+
+	if(istype(wear_suit, /obj/item/clothing/suit/armor/exoskeleton))
+		wear_suit.screen_loc = ui_oclothing
+		if(client && hud_used && hud_used.hud_shown)
+			if(hud_used.inventory_shown)
+				client.screen += wear_suit
+		update_observer_view(wear_suit,1)
+
+		overlays_standing[POWER_ARMOR_LAYER] = wear_suit.build_worn_icon(state = wear_suit.icon_state, default_layer = POWER_ARMOR_LAYER, default_icon_file = 'icons/mob/suit.dmi')
+		var/mutable_appearance/suit_overlay = overlays_standing[POWER_ARMOR_LAYER]
+		if(OFFSET_SUIT in dna.species.offset_features)
+			suit_overlay.pixel_x += dna.species.offset_features[OFFSET_SUIT][1]
+			suit_overlay.pixel_y += dna.species.offset_features[OFFSET_SUIT][2]
+		overlays_standing[POWER_ARMOR_LAYER] = suit_overlay
+	update_hair()
+	update_mutant_bodyparts()
+
+	apply_overlay(POWER_ARMOR_LAYER)
 
 
 /mob/living/carbon/human/update_inv_wear_mask()
