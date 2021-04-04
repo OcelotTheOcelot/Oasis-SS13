@@ -15,9 +15,9 @@
 #include "beestation.dme"
 
 // BEGIN_INCLUDE
-#include "code\__DEFINES\shoepacabras.dm"
-
 #include "code\__DEFINES\blackmarket.dm"
+#include "code\__DEFINES\shoepacabras.dm"
+#include "code\game\objects\items\melee\hfblade.dm"
 #include "code\modules\cargo\blackmarket\blackmarket_item.dm"
 #include "code\modules\cargo\blackmarket\blackmarket_market.dm"
 #include "code\modules\cargo\blackmarket\blackmarket_telepad.dm"
@@ -27,10 +27,6 @@
 #include "code\modules\cargo\blackmarket\blackmarket_items\misc.dm"
 #include "code\modules\cargo\blackmarket\blackmarket_items\tools.dm"
 #include "code\modules\cargo\blackmarket\blackmarket_items\weapons.dm"
-#include "code\controllers\subsystem\blackmarket.dm"
-#include "code\modules\language\shoepacabrish.dm"
-#include "code\modules\cargo\exports\engineering.dm"
-#include "code\game\objects\items\melee\hfblade.dm"
 #include "code\modules\cargo\exports\engineering.dm"
 #include "code\modules\language\shoepacabrish.dm"
 #include "code\modules\shuttle\shipstation.dm"
@@ -41,6 +37,7 @@
 #include "Oasis\code\__HELPERS\matrices.dm"
 #include "Oasis\code\__HELPERS\type2type.dm"
 #include "Oasis\code\_onclick\hud\shoepacabra.dm"
+#include "Oasis\code\controllers\subsystem\blackmarket.dm"
 #include "Oasis\code\controllers\subsystem\redbot.dm"
 #include "Oasis\code\datums\world_topic.dm"
 #include "Oasis\code\datums\components\power_armor_item.dm"

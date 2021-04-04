@@ -116,7 +116,7 @@ Couldn't be implemented with for loop because of different render layers.
 
 /obj/item/clothing/suit/armor/exoskeleton/equipped(mob/user, slot)
 	..()
-	if(slot == SLOT_WEAR_SUIT)
+	if(slot == ITEM_SLOT_OCLOTHING)
 		wearer = user
 		toggle_offset(user, TRUE)
 		dir = SOUTH
@@ -366,7 +366,7 @@ Accepts:
 		user.loc = loc
 		user.dir = dir
 		sleep(1)  // This simply prevents the suit transfering animation from being noticeable
-		user.equip_to_slot_if_possible(src, SLOT_WEAR_SUIT)
+		user.equip_to_slot_if_possible(src, ITEM_SLOT_OCLOTHING)
 
 /obj/item/clothing/suit/armor/exoskeleton/attackby(obj/item/W, mob/user, params)
 	var/equipped = is_equipped(user)
