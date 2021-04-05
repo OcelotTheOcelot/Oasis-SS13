@@ -42,7 +42,7 @@
 
 	var/disassemble_speed = 100  // How much time does it take to disassemble the exoskeleton
 
-	var/mob/living/wearer  // Current wearer of the suit, prefer using 'user' parameter if possible
+	var/mob/living/wearer  // Current wearer of the suit; use this instead of loc check, but prefer using 'user' proc parameter if present 
 	var/datum/action/innate/power_armor/exoskeleton_eject/eject_action  // A datum responsible for ejection from exosuit
 	var/list/exoskeleton_overlays = new  // An associative list containing appearances of the parts to be rendered when there's no part attached.
 

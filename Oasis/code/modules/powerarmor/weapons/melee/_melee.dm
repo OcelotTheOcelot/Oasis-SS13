@@ -5,13 +5,20 @@
 	lefthand_file = 'Oasis/icons/powerarmor/weapons/in_hands/64x_power_weapons_lefthand.dmi'
 	righthand_file = 'Oasis/icons/powerarmor/weapons/in_hands/64x_power_weapons_righthand.dmi'
 	inhand_x_dimension = 64
+	pixel_x = -16
 	inhand_y_dimension = 64
+	pixel_y = -16
 
-	var/can_be_sheathed = FALSE  // If this weapon can be stored in a sheath module. Requires sheathed icon state to work.
-	var/sheathed_icon_state  // The icon state to render this weapon when it's sheathed.
+	w_class = WEIGHT_CLASS_GIGANTIC
+	slowdown = 2
+	max_integrity = 200
+
+	var/can_be_sheathed = FALSE  // If this weapon can be stored in a sheath module; requires sheathed icon state to work
+	var/sheathed_icon_state  // The icon state to render this weapon when it's sheathed
 	var/tier = POWER_ARMOR_GRADE_BASIC  // The tier of the weapon, needed for balance
+	var/uses_energy = FALSE  // If the weapon requires the exoskeleton's power to be used (mostly needed to prohibit hulks from using this)
 
-	var/powered = FALSE  // If this weapon is currently used by a proper user.
+	var/powered = FALSE  // If this weapon is currently used by a proper user
 	var/force_powered = 24  // The force of the weapon when it's powered
 	var/throwforce_powered = 15  // The throw force of the weapon when it's powered
 	var/slowdown_powered = 0  // The slowdown of the weapon when it's powered
@@ -29,7 +36,7 @@ Returns:
 	if(!istype(H))
 		return FALSE
 
-	if(H.dna && H.dna.check_mutation(HULK))
+	if(!uses_energy && H.dna && H.dna.check_mutation(HULK))
 		return TRUE
 
 	var/obj/item/clothing/suit/armor/exoskeleton/E = H.wear_suit
@@ -88,4 +95,4 @@ Accepts:
 		if(rand(1, 100) <= POWER_WEAPON_COLLAPSE_CHANCE)
 			L.Knockdown(20)
 		else
-			step(L, L.dir)
+			step(L, L.dir)  // <TODO> Maybe make the user smash into walls and such?
