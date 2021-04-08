@@ -9,9 +9,7 @@
 
 /obj/item/power_armor_module/plasma_cutter/create_module_actions()
 	. = ..()
-	var/datum/action/innate/power_armor/module/deploy_tool/plasma_cutter/A = new 
-	A.module = src
-	. += A
+	. += new /datum/action/innate/power_armor/module/deploy_tool/plasma_cutter
 	return .
 
 /datum/action/innate/power_armor/module/deploy_tool/plasma_cutter

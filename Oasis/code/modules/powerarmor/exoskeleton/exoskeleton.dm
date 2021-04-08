@@ -6,6 +6,7 @@
 
 	// Note: we use our own magic to render the exoskeleton
 	icon = null
+	pass_flags = 0
 	alternate_worn_icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'
 	icon_state = ""
 	item_state = ""
