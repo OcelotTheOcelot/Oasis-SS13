@@ -33,6 +33,7 @@
 	var/obj/item/stock_parts/cell/cell  // The exoskeleton's power cell
 	var/activated = FALSE  // Determines if the suit is active
 	var/powered = FALSE  // Determines if the suit has a power cell with some charge in it
+	var/power_drain_per_step = 5  // How much power is drained when the wearer moves
 
 	var/additive_slowdown  // How much the attached parts should slow the user down
 	var/eqipment_delay = 0  // How much time it takes to equip the exoskeleton
@@ -88,7 +89,7 @@ Couldn't be implemented with for loop because of different render layers.
 
 /obj/item/clothing/suit/armor/exoskeleton/examine(mob/user)
 	. = ..()
-	if(cell)
+	if(!QDELETED(cell))
 		. += "<span class='notice'>The power indicator reads that \the [src] is [round(cell.percent())]% charged.</span>"
 	else
 		. += "<span class='warning'>\The [src] has no power source installed.</span>"
@@ -99,7 +100,7 @@ Couldn't be implemented with for loop because of different render layers.
 		. += "<span class='notice'>It has [parts[P]] attached.</span>"
 
 /obj/item/clothing/suit/armor/exoskeleton/Destroy()
-	if(cell)
+	if(!QDELETED(cell))
 		QDEL_NULL(cell)
 	var/obj/item/power_armor_part/P
 	for(P in parts)
@@ -203,7 +204,30 @@ Called when the cell is dead or taken off.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/depower()
 	powered = FALSE
+	if(!QDELETED(wearer))
+		if(QDELETED(cell))
+			to_chat(wearer, "<span class='warning'>\The [src] has lost its power source!</span>")
+		else
+			to_chat(wearer, "<span class='warning'>\The [src]'s [cell] is dead!</span>")
 	deactivate()
+
+/* Drain power
+Drains some amount of power from cell.
+Accepts:
+	amount, the amount of power to drain
+Returns:
+	TRUE if cell was used successfully, FALSE if it's dead 
+*/
+/obj/item/clothing/suit/armor/exoskeleton/proc/drain_power(amount)
+	if(!cell.use(amount) && powered)
+		depower()
+		return FALSE
+	return TRUE
+
+/obj/item/clothing/suit/armor/exoskeleton/on_mob_move()
+	..()
+	if(!QDELETED(cell))
+		drain_power(power_drain_per_step)
 
 /* Activate
 Called when the suit is equipped and powered.
@@ -310,7 +334,7 @@ Deletes the exoskeleton and spawns its disassembled version.
 /obj/item/clothing/suit/armor/exoskeleton/proc/disassemble()
 	var/obj/item/exoskeleton_assembly/E = new(get_turf(src))
 	E.obj_integrity = obj_integrity
-	if(cell)
+	if(!QDELETED(cell))
 		cell.update_icon()
 		cell.forceMove(get_turf(src))
 	QDEL_NULL(src)

@@ -43,12 +43,12 @@
 	var/datum/component/power_armor_item/PAI = GetComponent(/datum/component/power_armor_item)
 	if(!istype(PAI))
 		return
-	var/obj/item/stock_parts/cell/C = PAI.get_cell()
-	if(!istype(C))
+	var/obj/item/clothing/suit/armor/exoskeleton/E = PAI.get_exoskeleton()
+	if(!istype(E))
 		return
 	var/obj/item/ammo_casing/energy/shot = ammo_type[select]
 	if(!shot)
 		return
-	if(C.use(shot.e_cost))
+	if(E.drain_power(shot.e_cost))
 		cell.give(shot.e_cost)
 	..()
