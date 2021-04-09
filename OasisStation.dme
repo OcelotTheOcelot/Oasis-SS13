@@ -82,6 +82,7 @@
 #include "Oasis\code\modules\powerarmor\exoskeleton\exoskeleton_tiers.dm"
 #include "Oasis\code\modules\powerarmor\helmets\_helmet.dm"
 #include "Oasis\code\modules\powerarmor\modules\_module.dm"
+#include "Oasis\code\modules\powerarmor\modules\grasshopper.dm"
 #include "Oasis\code\modules\powerarmor\modules\hydraulic_clamp.dm"
 #include "Oasis\code\modules\powerarmor\modules\magnetic_clamp.dm"
 #include "Oasis\code\modules\powerarmor\modules\mega_blaster.dm"

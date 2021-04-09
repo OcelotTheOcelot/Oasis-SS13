@@ -22,5 +22,6 @@
 	new /obj/item/power_armor_part/r_leg/p5000pwl(loc)
 	
 	new /obj/item/power_armor_module/hydraulic_clamp(loc)
+	new /obj/item/power_armor_module/grasshopper(loc)
 
 	QDEL_NULL(src)

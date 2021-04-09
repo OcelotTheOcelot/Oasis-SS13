@@ -219,6 +219,8 @@ Returns:
 	TRUE if cell was used successfully, FALSE if it's dead 
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/drain_power(amount)
+	if(QDELETED(cell))
+		return FALSE
 	if(!cell.use(amount) && powered)
 		depower()
 		return FALSE
