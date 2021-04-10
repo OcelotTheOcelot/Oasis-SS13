@@ -95,16 +95,14 @@ Couldn't be implemented with for loop because of different render layers.
 		. += "<span class='warning'>\The [src] has no power source installed.</span>"
 	. += "<span class='notice'>Its maintenance panel is [panel_opened ? "opened" : "closed"]</span>"
 
-	var/P
-	for(P in parts)
+	for(var/P in parts)
 		. += "<span class='notice'>It has [parts[P]] attached.</span>"
 
 /obj/item/clothing/suit/armor/exoskeleton/Destroy()
 	if(!QDELETED(cell))
 		QDEL_NULL(cell)
-	var/obj/item/power_armor_part/P
-	for(P in parts)
-		QDEL_NULL(P)
+	for(var/P in parts)
+		QDEL_NULL(parts[P])
 	if(eject_action)
 		QDEL_NULL(eject_action)
 	toggle_offset(FALSE)
@@ -151,12 +149,8 @@ Couldn't be implemented with for loop because of different render layers.
 
 		toggle_offset(user, FALSE)
 		var/obj/item/clothing/head/helmet/power_armor/helmet = user.get_item_by_slot(ITEM_SLOT_HEAD)
-		to_chat(user, "<span class='boldwarning'>DEBUG: We received [user.get_item_by_slot(ITEM_SLOT_HEAD)]</span>")  // <TODO>
 		if(istype(helmet))
 			user.dropItemToGround(helmet)
-			to_chat(user, "<span class='boldwarning'>DEBUG: Droppin [helmet]!</span>")  // <TODO>
-		else
-			to_chat(user, "<span class='boldwarning'>DEBUG: [helmet] is not a PA helm!</span>")  // <TODO>
 
 		REMOVE_TRAIT(user, TRAIT_EXOSKELETON, CLOTHING_TRAIT)
 		wearer = null
@@ -219,9 +213,12 @@ Returns:
 	TRUE if cell was used successfully, FALSE if it's dead 
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/drain_power(amount)
-	if(QDELETED(cell))
+	if(!powered)
 		return FALSE
-	if(!cell.use(amount) && powered)
+	if(QDELETED(cell))
+		depower()
+		return FALSE
+	if(!cell.use(amount))
 		depower()
 		return FALSE
 	return TRUE
@@ -463,8 +460,20 @@ Accepts:
 			to_chat(user, "<span class='warning'>\The [part] is too advanced for \the [src] to support!</span>")
 			return
 		if(part.slot == EXOSKELETON_SLOT_LINING && !bare)
-			to_chat(user, "<span class='notice'>A lining layer can be added only onto a bare exoskeleton!</span>")
+			to_chat(user, "<span class='warning'>A lining layer can be added only onto a bare exoskeleton!</span>")
 			return
+		if(!part.pauldron_compatible)
+			var/obj/item/power_armor_part/torso/T = parts[EXOSKELETON_SLOT_TORSO]
+			if(istype(T) && T.pauldrons)
+				to_chat(user, "<span class='warning'>\The [part] is incompatible with \the [T]'s pauldrons!</span>")
+				return
+		if(part.slot == EXOSKELETON_SLOT_TORSO)
+			var/obj/item/power_armor_part/torso/T = parts[EXOSKELETON_SLOT_TORSO]
+			if(istype(T) && T.pauldrons)
+				for(var/P in parts)
+					if(parts[P] && !parts[P].pauldron_compatible)
+						to_chat(user, "<span class='warning'>\The [part]'s pauldrons are incompatible with \the [P]!</span>")
+						return
 		var/obj/item/power_armor_part/previous_part = parts[part.slot]
 		if(previous_part)
 			to_chat(user, "<span class='warning'>This junction is already occupied by \the [previous_part]!</span>")
