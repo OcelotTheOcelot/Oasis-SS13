@@ -1,4 +1,12 @@
-/* Power armor system by NDOcelot (#4852) (spriting and coding) and TottalyNotC (spriting) */
+/* Power armor system by NDOcelot (#4852)
+Credits:
+	NDOcelot
+		for all the code and most of the sprites;
+	TottalyNotC
+		for his balance recommendations, concepts and sprites of "Pangolin", "Mk.II APA" and "Juggernaut" armor sets;
+	NDHavch1k
+		for his balance recommendations, "Mk.II APA" helmet and "Juggernaut" armor set sprite and willing to helpful (at least I want to believe so).
+*/
 
 /obj/item/clothing/suit/armor/exoskeleton
 	name = "exoskeleton"
@@ -96,7 +104,10 @@ Couldn't be implemented with for loop because of different render layers.
 	. += "<span class='notice'>Its maintenance panel is [panel_opened ? "opened" : "closed"]</span>"
 
 	for(var/P in parts)
-		. += "<span class='notice'>It has [parts[P]] attached.</span>"
+		if(parts[P]?.broken)
+			. += "<span class='warning'>The attached [parts[P]] is broken!</span>"
+		else
+			. += "<span class='notice'>It has \the [parts[P]] attached.</span>"
 
 /obj/item/clothing/suit/armor/exoskeleton/Destroy()
 	if(!QDELETED(cell))
@@ -383,7 +394,8 @@ Accepts:
 	if(!istype(user))
 		return
 	if(!istype(M))
-		to_chat(user, "<span class='warning'>\The [src] is designed to be worn by humanlike lifeforms only!</span>")
+		if(istype(M, /mob/living))
+			to_chat(user, "<span class='warning'>\The [src] is designed to be worn by humanlike lifeforms only!</span>")
 		return
 	if(M.wear_suit)
 		if(M == user)
@@ -448,9 +460,6 @@ Accepts:
 		if(equipped)
 			to_chat(user, "<span class='warning'>You can not add parts to \the [src] while you are wearing it!</span>")
 			return
-		if(panel_opened)
-			to_chat(user, "<span class='warning'>You have to close the maintenance panel before adding parts!</span>")
-			return
 		var/obj/item/power_armor_part/part = W
 		var/obj/item/other_item = user.get_inactive_held_item()
 		if(!other_item || other_item.tool_behaviour != TOOL_WRENCH)
@@ -468,7 +477,10 @@ Accepts:
 				to_chat(user, "<span class='warning'>\The [part] is incompatible with \the [T]'s pauldrons!</span>")
 				return
 		if(part.slot == EXOSKELETON_SLOT_TORSO)
-			var/obj/item/power_armor_part/torso/T = parts[EXOSKELETON_SLOT_TORSO]
+			if(panel_opened)
+				to_chat(user, "<span class='warning'>You have to close the maintenance panel before adding [part]!</span>")
+				return
+			var/obj/item/power_armor_part/torso/T = part
 			if(istype(T) && T.pauldrons)
 				for(var/P in parts)
 					if(parts[P] && !parts[P].pauldron_compatible)

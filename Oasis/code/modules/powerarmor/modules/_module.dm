@@ -111,9 +111,7 @@ Accepts:
 /obj/item/power_armor_module/proc/occupy_hand(forced = FALSE)
 	if(!held_item_type)
 		return
-	if(!(part && part.exoskeleton && part.exoskeleton.wearer))
-		return
-	var/mob/living/carbon/human/H = part.exoskeleton.wearer
+	var/mob/living/carbon/human/H = part?.exoskeleton?.wearer
 	if(!istype(H))
 		return
 	var/hand_index = part.slot == EXOSKELETON_SLOT_L_ARM ? 1 : 2  // Really, there is no macros for hand indexes?
@@ -135,9 +133,7 @@ If held_item_type is specified, deletes the held_item in the wearer's occupied h
 	if(held_item)
 		held_item.forceMove(src)
 		hand_occupied = FALSE
-	if(!(part && part.exoskeleton && part.exoskeleton.wearer))
-		return
-	var/mob/living/carbon/human/H = part.exoskeleton.wearer
+	var/mob/living/carbon/human/H = part?.exoskeleton?.wearer
 	if(!istype(H))
 		return
 	H.update_inv_hands()
@@ -146,7 +142,7 @@ If held_item_type is specified, deletes the held_item in the wearer's occupied h
 Grants all actions of the module to the wearer.
 */
 /obj/item/power_armor_module/proc/grant_actions()
-	if(!(part && part.exoskeleton && part.exoskeleton.wearer))
+	if(!(part?.exoskeleton?.wearer))
 		return
 	for(var/datum/action/innate/power_armor/module/A in module_actions)
 		A.Grant(part.exoskeleton.wearer)
@@ -155,7 +151,7 @@ Grants all actions of the module to the wearer.
 Removes all actions of the module from the wearer.
 */
 /obj/item/power_armor_module/proc/remove_actions()
-	if(!(part && part.exoskeleton && part.exoskeleton.wearer))
+	if(!(part?.exoskeleton?.wearer))
 		return
 	for(var/datum/action/innate/power_armor/module/A in module_actions)
 		A.Remove(part.exoskeleton.wearer)
