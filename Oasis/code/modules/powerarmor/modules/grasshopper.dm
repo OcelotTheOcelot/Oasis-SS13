@@ -4,7 +4,6 @@
 	icon = 'Oasis/icons/powerarmor/modules/grasshopper.dmi'
 	slot = MODULE_SLOT_BELT
 	render_priority = POWER_ARMOR_LAYER_BELT_MODULE_FRONT
-	var/ready_to_hop = FALSE  // If TRUE, the hop proc will be executed on the next wearer's step
 	var/hop_power_cost = 200  // How much power does the hopping consume
 
 	// The following code is pretty much copied from jump boots
@@ -22,12 +21,14 @@
 Makes the wearer leap in their current direction , if they have enough power in their exoskeleton for that.
 */
 /obj/item/power_armor_module/grasshopper/proc/hop()
-	ready_to_hop = FALSE
-	var/obj/item/clothing/suit/armor/exoskeleton/E = part && part.exoskeleton
+	var/obj/item/clothing/suit/armor/exoskeleton/E = part?.exoskeleton
 	if(!istype(E))
 		return
 	var/mob/living/user = E.wearer
 	if(!istype(user))
+		return
+	if(!both_legs_intact())
+		to_chat(user, "<span class='warning'>\The [E]'s leg armor pieces are malfunctioning!</span>")
 		return
 	if(!(user.mobility_flags & MOBILITY_STAND))
 		to_chat(user, "<span class='warning'>You should be standing to jump!</span>")

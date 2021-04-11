@@ -28,7 +28,7 @@
 #define POWER_ARMOR_LAYER_TORSO					5
 #define POWER_ARMOR_LAYER_LEGS					6
 #define POWER_ARMOR_LAYER_LEG_MODULES			7
-#define POWER_ARMOR_LAYER_TORSO_ALT				8  // Used when the tosro should be rendered above the arms 
+#define POWER_ARMOR_LAYER_TORSO_ALT				8  // Used when the torso should be rendered above the arms 
 #define POWER_ARMOR_LAYER_BELT_MODULE_FRONT		9
 #define POWER_ARMOR_LAYER_CHEST_MODULE_FRONT	10
 #define POWER_ARMOR_LAYER_ARMS					11

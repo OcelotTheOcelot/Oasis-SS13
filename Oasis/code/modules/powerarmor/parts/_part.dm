@@ -186,6 +186,18 @@ Accepts:
 	for(var/M in modules)
 		modules[M]?.on_wearer_left(user)
 
+/* On detached
+Called when the part is detached from the exoskeleton.
+*/
+/obj/item/power_armor_part/proc/on_detached()
+	return
+
+/* On attached
+Called when the part is attached to an exoskeleton.
+*/
+/obj/item/power_armor_part/proc/on_attached()
+	return
+
 /obj/item/power_armor_part/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1)
 	. = ..(damage_amount, damage_type, damage_flag, sound_effect)
 	if(.)
@@ -219,6 +231,12 @@ Breaks the part and disables correlated limbs.
 	var/pauldrons = FALSE  // If the torso has pauldrons to be rendered 
 	var/uses_empty_state = FALSE  // If the torso has additional layer for rendering when not occupied
 
+/obj/item/power_armor_part/torso/on_detached()
+	/obj/item/power_armor_module/M = modules["[MODULE_SLOT_BELT]"]
+	if(istype(M))
+		detach_module(M)
+	..()
+
 /obj/item/power_armor_part/torso/Initialize()
 	..()
 	if(pauldrons)
@@ -235,8 +253,8 @@ Breaks the part and disables correlated limbs.
 	icon_state = "l_arm_item"
 	part_icon_state = "l_arm"
 	render_priority = POWER_ARMOR_LAYER_ARMS
-	var/held_item_offset_x = 0  // How many pixels the icon of the item held in the according hand is shifted on x-axis
-	var/held_item_offset_y = 0  // How many pixels the icon of the item held in the according hand is shifted on y-axis
+	var/held_item_offset_x = 1  // How many pixels the icon of the item held in the according hand is shifted on x-axis
+	var/held_item_offset_y = 4  // How many pixels the icon of the item held in the according hand is shifted on y-axis
 
 /obj/item/power_armor_part/r_arm
 	slot = EXOSKELETON_SLOT_R_ARM
@@ -246,8 +264,8 @@ Breaks the part and disables correlated limbs.
 	icon_state = "r_arm_item"
 	part_icon_state = "r_arm"
 	render_priority = POWER_ARMOR_LAYER_ARMS
-	var/held_item_offset_x = 0  // See held_item_offset_x of /obj/item/power_armor_part/l_arm
-	var/held_item_offset_y = 0  // See held_item_offset_y of /obj/item/power_armor_part/l_arm
+	var/held_item_offset_x = 1  // See held_item_offset_x of /obj/item/power_armor_part/l_arm
+	var/held_item_offset_y = 4  // See held_item_offset_y of /obj/item/power_armor_part/l_arm
 
 /obj/item/power_armor_part/l_leg
 	slot = EXOSKELETON_SLOT_L_LEG
@@ -257,6 +275,15 @@ Breaks the part and disables correlated limbs.
 	part_icon_state = "l_leg"
 	render_priority = POWER_ARMOR_LAYER_LEGS
 
+/obj/item/power_armor_part/l_leg/on_detached()
+	if(istype(exoskeleton))
+		var/item/power_armor_part/torso/T = exoskeleton.parts[EXOSKELETON_SLOT_TORSO]
+		if(istype(T))
+			/obj/item/power_armor_module/M = T.modules["[MODULE_SLOT_BELT]"]
+			if(istype(M))
+				T.detach_module(M)
+	..()
+
 /obj/item/power_armor_part/r_leg
 	slot = EXOSKELETON_SLOT_R_LEG
 	body_parts_covered = LEG_RIGHT|FOOT_RIGHT
@@ -264,6 +291,15 @@ Breaks the part and disables correlated limbs.
 	icon_state = "r_leg_item"
 	part_icon_state = "r_leg"
 	render_priority = POWER_ARMOR_LAYER_LEGS
+
+/obj/item/power_armor_part/r_leg/on_detached()
+	if(istype(exoskeleton))
+		var/item/power_armor_part/torso/T = exoskeleton.parts[EXOSKELETON_SLOT_TORSO]
+		if(istype(T))
+			/obj/item/power_armor_module/M = T.modules["[MODULE_SLOT_BELT]"]
+			if(istype(M))
+				T.detach_module(M)
+	..()
 
 /obj/item/power_armor_part/lining
 	slot = EXOSKELETON_SLOT_LINING

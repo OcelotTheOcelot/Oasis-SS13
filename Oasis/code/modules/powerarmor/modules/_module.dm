@@ -184,3 +184,18 @@ Removes related actions and items.
 /obj/item/power_armor_module/proc/on_part_broken()
 	if(!locks_hand)
 		free_hand()
+
+/* Both legs intact
+Helper proc, performs "broken" check for the exoskeleton legs for belt modules.
+Returns:
+	TRUE if both power armor legs are present and not broken, FALSE otherwise.
+*/
+/obj/item/power_armor_module/proc/both_legs_intact()
+	var/obj/item/clothing/suit/armor/exoskeleton/E = part?.exoskeleton
+	if(!istype(E))
+		return FALSE
+	if(!E.parts[EXOSKELETON_SLOT_L_LEG] || E.parts[EXOSKELETON_SLOT_L_LEG].broken)
+		return FALSE
+	if(!E.parts[EXOSKELETON_SLOT_R_LEG] || E.parts[EXOSKELETON_SLOT_R_LEG].broken)
+		return FALSE
+	return TRUE

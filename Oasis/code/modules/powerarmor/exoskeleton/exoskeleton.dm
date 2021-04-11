@@ -263,10 +263,14 @@ Accepts:
 	P, the part to attach
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/attach_part(obj/item/power_armor_part/P)
+	if(!istype(P))
+		return
 	parts[P.slot] = P
 	P.exoskeleton = src
+	P.on_attached(src)
 	if(wearer)
 		P.on_wearer_entered(wearer)
+		wearer.update_inv_wear_suit()
 
 	body_parts_covered |= P.body_parts_covered
 	power_armor_overlays |= P.power_armor_overlays
@@ -287,8 +291,10 @@ Accepts:
 	var/obj/item/power_armor_part/P = parts[slot]
 	if(!istype(P))
 		return
+	P.on_detached(src)
 	if(wearer)
 		P.on_wearer_left(wearer)
+		wearer.update_inv_wear_suit()
 	P.forceMove(get_turf(src))
 	parts -= slot
 	P.exoskeleton = null
