@@ -232,7 +232,7 @@
 		var/stamina_was = picked.stamina_dam
 
 
-		update |= picked.receive_damage(brute_per_part, burn_per_part, stamina_per_part, FALSE, required_status)
+		update |= picked.receive_damage(brute_per_part, burn_per_part, stamina_per_part, FALSE, required_status, ignore_interception=TRUE)
 
 		brute	= round(brute - (picked.brute_dam - brute_was), DAMAGE_PRECISION)
 		burn	= round(burn - (picked.burn_dam - burn_was), DAMAGE_PRECISION)

@@ -142,7 +142,7 @@
 //Applies brute and burn damage to the organ. Returns 1 if the damage-icon states changed at all.
 //Damage will not exceed max_damage using this proc
 //Cannot apply negative damage
-/obj/item/bodypart/proc/receive_damage(brute = 0, burn = 0, stamina = 0, blocked = 0, updating_health = TRUE, required_status = null)
+/obj/item/bodypart/proc/receive_damage(brute = 0, burn = 0, stamina = 0, blocked = 0, updating_health = TRUE, required_status = null, ignore_interception = FALSE)
 	var/hit_percent = (100-blocked)/100
 	if((!brute && !burn && !stamina) || hit_percent <= 0)
 		return FALSE
@@ -161,6 +161,17 @@
 
 	if(!brute && !burn && !stamina)
 		return FALSE
+
+	/* Power armor damage interception
+	The only reason I didn't use the existing armor system to intercept damage is because it would require refactoring of the entire thing:
+	armor checks alone won't allow to apply damage to the parts properly,
+	and the applying damage won't allow to determine what body part the damage is applied to.
+	hit_reaction proc is not an option as well, because it's called only under conditions too special to fit the indended purpose of pwoer armor.
+	– Ocelot */
+	if(!ignore_interception)
+		var/datum/component/power_armor_damage_interceptor/PADI = GetComponent(/datum/component/power_armor_damage_interceptor)
+		if(istype(PADI) && PADI?.intercept_damage(brute, burn, stamina))
+			return FALSE
 
 	switch(animal_origin)
 		if(ALIEN_BODYPART,LARVA_BODYPART) //aliens take double burn //nothing can burn with so much snowflake code around
@@ -229,6 +240,10 @@
 /obj/item/bodypart/proc/is_disabled()
 	if(HAS_TRAIT(src, TRAIT_PARALYSIS))
 		return BODYPART_DISABLED_PARALYSIS
+
+	if(get_power_armor_part()?.broken)
+		return BODYPART_DISABLED_OBSTRUCTED
+
 	if(can_dismember() && !HAS_TRAIT(owner, TRAIT_NOLIMBDISABLE))
 		. = disabled //inertia, to avoid limbs healing 0.1 damage and being re-enabled
 		if((get_damage(TRUE) >= max_damage) || (HAS_TRAIT(owner, TRAIT_EASYLIMBDISABLE) && (get_damage(TRUE) >= (max_damage * 0.6)))) //Easy limb disable disables the limb at 40% health instead of 0%
@@ -434,6 +449,18 @@
 			if(aux_zone)
 				aux.color = "#[draw_color]"
 
+
+/* Get power armor
+Checks if the bodypart is covered by a piece of power armor and if it is, returns the part.
+Returs:
+	The power armor part or null
+*/
+/obj/item/bodypart/proc/get_power_armor_part()
+	var/datum/component/power_armor_damage_interceptor/PADI = GetComponent(/datum/component/power_armor_damage_interceptor)
+	if(istype(PADI))
+		return PADI.part
+	return null
+
 /obj/item/bodypart/deconstruct(disassembled = TRUE)
 	drop_organs()
 	qdel(src)
@@ -533,18 +560,19 @@
 	. = ..()
 	if(!.)
 		return
-	if(disabled == BODYPART_DISABLED_DAMAGE)
-		if(owner.stat < UNCONSCIOUS)
-			owner.emote("scream")
-		if(owner.stat < DEAD)
-			to_chat(owner, "<span class='userdanger'>Your [name] is too damaged to function!</span>")
+	if(disabled != BODYPART_NOT_DISABLED)
 		if(held_index)
 			owner.dropItemToGround(owner.get_item_for_held_index(held_index))
-	else if(disabled == BODYPART_DISABLED_PARALYSIS)
 		if(owner.stat < DEAD)
-			to_chat(owner, "<span class='userdanger'>You can't feel your [name]!</span>")
-			if(held_index)
-				owner.dropItemToGround(owner.get_item_for_held_index(held_index))
+			switch(disabled)
+				if(BODYPART_DISABLED_DAMAGE)
+					to_chat(owner, "<span class='userdanger'>Your [name] is too damaged to function!</span>")
+					if(owner.stat < UNCONSCIOUS)
+						owner.emote("scream")
+				if(BODYPART_DISABLED_PARALYSIS)
+					to_chat(owner, "<span class='userdanger'>You can't feel your [name]!</span>")
+				if(BODYPART_DISABLED_OBSTRUCTED)
+					to_chat(owner, "<span class='userdanger'>Something prevents your [name] from moving!</span>")
 	if(owner.hud_used)
 		var/atom/movable/screen/inventory/hand/L = owner.hud_used.hand_slots["[held_index]"]
 		if(L)
@@ -614,18 +642,19 @@
 	. = ..()
 	if(!.)
 		return
-	if(disabled == BODYPART_DISABLED_DAMAGE)
-		if(owner.stat < UNCONSCIOUS)
-			owner.emote("scream")
-		if(owner.stat < DEAD)
-			to_chat(owner, "<span class='userdanger'>Your [name] is too damaged to function!</span>")
+	if(disabled != BODYPART_NOT_DISABLED)
 		if(held_index)
 			owner.dropItemToGround(owner.get_item_for_held_index(held_index))
-	else if(disabled == BODYPART_DISABLED_PARALYSIS)
 		if(owner.stat < DEAD)
-			to_chat(owner, "<span class='userdanger'>You can't feel your [name]!</span>")
-			if(held_index)
-				owner.dropItemToGround(owner.get_item_for_held_index(held_index))
+			switch(disabled)
+				if(BODYPART_DISABLED_DAMAGE)
+					to_chat(owner, "<span class='userdanger'>Your [name] is too damaged to function!</span>")
+					if(owner.stat < UNCONSCIOUS)
+						owner.emote("scream")
+				if(BODYPART_DISABLED_PARALYSIS)
+					to_chat(owner, "<span class='userdanger'>You can't feel your [name]!</span>")
+				if(BODYPART_DISABLED_OBSTRUCTED)
+					to_chat(owner, "<span class='userdanger'>Something prevents your [name] from moving!</span>")
 	if(owner.hud_used)
 		var/atom/movable/screen/inventory/hand/R = owner.hud_used.hand_slots["[held_index]"]
 		if(R)
@@ -690,14 +719,16 @@
 	. = ..()
 	if(!.)
 		return
-	if(disabled == BODYPART_DISABLED_DAMAGE)
-		if(owner.stat < UNCONSCIOUS)
-			owner.emote("scream")
-		if(owner.stat < DEAD)
-			to_chat(owner, "<span class='userdanger'>Your [name] is too damaged to function!</span>")
-	else if(disabled == BODYPART_DISABLED_PARALYSIS)
-		if(owner.stat < DEAD)
-			to_chat(owner, "<span class='userdanger'>You can't feel your [name]!</span>")
+	if(owner.stat < DEAD)
+		switch(disabled)
+			if(BODYPART_DISABLED_DAMAGE)
+				if(owner.stat < UNCONSCIOUS)
+					owner.emote("scream")
+				to_chat(owner, "<span class='userdanger'>Your [name] is too damaged to function!</span>")
+			if(BODYPART_DISABLED_PARALYSIS)
+				to_chat(owner, "<span class='userdanger'>You can't feel your [name]!</span>")
+			if(BODYPART_DISABLED_OBSTRUCTED)
+				to_chat(owner, "<span class='userdanger'>Something prevents your [name] from moving!</span>")
 
 /obj/item/bodypart/l_leg/digitigrade
 	name = "left digitigrade leg"
@@ -763,14 +794,16 @@
 	. = ..()
 	if(!.)
 		return
-	if(disabled == BODYPART_DISABLED_DAMAGE)
-		if(owner.stat < UNCONSCIOUS)
-			owner.emote("scream")
-		if(owner.stat < DEAD)
-			to_chat(owner, "<span class='userdanger'>Your [name] is too damaged to function!</span>")
-	else if(disabled == BODYPART_DISABLED_PARALYSIS)
-		if(owner.stat < DEAD)
-			to_chat(owner, "<span class='userdanger'>You can't feel your [name]!</span>")
+	if(owner.stat < DEAD)
+		switch(disabled)
+			if(BODYPART_DISABLED_DAMAGE)
+				if(owner.stat < UNCONSCIOUS)
+					owner.emote("scream")
+				to_chat(owner, "<span class='userdanger'>Your [name] is too damaged to function!</span>")
+			if(BODYPART_DISABLED_PARALYSIS)
+				to_chat(owner, "<span class='userdanger'>You can't feel your [name]!</span>")
+			if(BODYPART_DISABLED_OBSTRUCTED)
+				to_chat(owner, "<span class='userdanger'>Something prevents your [name] from moving!</span>")
 
 /obj/item/bodypart/r_leg/digitigrade
 	name = "right digitigrade leg"

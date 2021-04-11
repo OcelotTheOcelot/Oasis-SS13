@@ -1345,8 +1345,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 		var/armor_block = target.run_armor_check(affecting, "melee")
 
-		playsound(target.loc, user.dna.species.attack_sound, 25, 1, -1)
-
 		target.visible_message("<span class='danger'>[user] [atk_verb]ed [target]!</span>", \
 					"<span class='userdanger'>[user] [atk_verb]ed you!</span>", null, COMBAT_MESSAGE_RANGE)
 
@@ -1354,8 +1352,13 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		target.lastattackerckey = user.ckey
 		user.dna.species.spec_unarmedattacked(user, target)
 
-		if(user.limb_destroyer)
-			target.dismembering_strike(user, affecting.body_zone)
+		// Snowflake code for power armor damage interception
+		var/obj/item/power_armor_part/P = affecting.get_power_armor_part()
+		if(!P || P.broken)
+			playsound(target.loc, user.dna.species.attack_sound, 25, 1, -1)
+
+			if(user.limb_destroyer)
+				target.dismembering_strike(user, affecting.body_zone)
 
 		if(atk_verb == ATTACK_EFFECT_KICK)//kicks deal 1.5x raw damage
 			target.apply_damage(damage*1.5, attack_type, affecting, armor_block)
@@ -1554,6 +1557,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 	if(!I.force)
 		return 0 //item force is zero
+
+	// Snowflake code for power armor damage interception; an armoured bodypart shouldn't leave blood when hit; 
+	var/obj/item/power_armor_part/P = affecting.get_power_armor_part()
+	if(P && !P.broken)
+		return FALSE
 
 	//dismemberment
 	var/dismemberthreshold = ((affecting.max_damage * 2) - affecting.get_damage()) //don't take the current hit into account.
