@@ -146,7 +146,7 @@ Couldn't be implemented with for loop because of different render layers.
 		else if(!powered)
 			to_chat(user, "<span class='warning'>Your limbs can hardly move in this unpowered [src]...</span>")
 		else
-			to_chat(user, "<span class='notice'>It's kinda difficult to move in this bulky suit...</span>")
+			to_chat(user, "<span class='notice'>It's difficult to move in this bulky suit...</span>")
 
 		// if user.has_trauma_type ... <TODO> paraplegic people should gain ability to walk using this
 
@@ -265,6 +265,8 @@ Accepts:
 /obj/item/clothing/suit/armor/exoskeleton/proc/attach_part(obj/item/power_armor_part/P)
 	parts[P.slot] = P
 	P.exoskeleton = src
+	if(wearer)
+		P.on_wearer_entered(wearer)
 
 	body_parts_covered |= P.body_parts_covered
 	power_armor_overlays |= P.power_armor_overlays
@@ -285,6 +287,8 @@ Accepts:
 	var/obj/item/power_armor_part/P = parts[slot]
 	if(!istype(P))
 		return
+	if(wearer)
+		P.on_wearer_left(wearer)
 	P.forceMove(get_turf(src))
 	parts -= slot
 	P.exoskeleton = null
@@ -371,8 +375,7 @@ Accepts:
 	if(!is_equipped(user))
 		return
 	to_chat(user, "<span class='notice'>You begin to eject yourself from \the [src]...</span>")
-	if(do_after(user, eqipment_delay, target = src))
-		user.dropItemToGround(src, TRUE)
+	if(do_after(user, eqipment_delay, target = src) && user.dropItemToGround(src, TRUE))
 		user.update_inv_wear_suit()
 		dir = user.dir
 		to_chat(user, "<span class='notice'>You eject yourself from \the [src].</span>")

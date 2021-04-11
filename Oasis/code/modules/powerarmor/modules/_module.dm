@@ -176,3 +176,11 @@ Accepts:
 /obj/item/power_armor_module/proc/on_wearer_left(mob/user)
 	free_hand()
 	remove_actions()
+
+/* On part broken
+Called when the part holding the module is broken.
+Removes related actions and items.
+*/
+/obj/item/power_armor_module/proc/on_part_broken()
+	if(!locks_hand)
+		free_hand()

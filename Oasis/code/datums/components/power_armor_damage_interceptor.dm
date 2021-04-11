@@ -43,28 +43,23 @@ Returns:
 	TRUE if the damage has been absorbed, FALSE otherwise
 */
 /datum/component/power_armor_damage_interceptor/proc/intercept_damage(brute, burn, stamina)
-	
-	var/obj/item/bodypart/testbp = parent
-	to_chat(testbp?.owner, "<span class='boldwarning'>DEBUG: 1!</span>")
-	
 	if(!validate_part())
 		return FALSE
-
-	to_chat(testbp?.owner, "<span class='boldwarning'>DEBUG: 2!</span>")
-
 	if(part.broken)
 		return FALSE
-	
-	to_chat(testbp?.owner, "<span class='boldwarning'>DEBUG: 3!</span>")
-
 	var/obj/item/bodypart/BP = parent_as_bodypart()
 	if(!BP)
 		return FALSE
 	to_chat(BP.owner, "<span class='boldwarning'>DEBUG: [part] intercepts damage incoming to [BP]: \[[brute]/[burn]/[stamina]\]...</span>")
+	
+	/* Believe me it would be quite painful to overhaul the entire hitsound system, therefore we have sound_effect=FALSE
+	Later, we could transfer hitsound from item_attack to mobs and objs attacked_by proc, but this is not the prerogative for now.  
+	Even sand golems don't have custom hitsounds, come on!.. 
+	*/
 	if(brute > 0)
-		part.take_damage(brute, BRUTE)
+		part.take_damage(brute, BRUTE, sound_effect=FALSE)
 	if(burn > 0)
-		part.take_damage(burn, BURN)
+		part.take_damage(burn, BURN, sound_effect=FALSE)
 
 	BP.receive_damage(0, 0, stamina, ignore_interception=TRUE)
 	return TRUE

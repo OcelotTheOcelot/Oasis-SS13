@@ -10,8 +10,11 @@
 	throw_range = 3
 	body_parts_covered = 0
 
-	max_integrity = 60
+	max_integrity = 80
 
+	// How much damage points the part absorbs until it's broken.
+	// Supposed to be lower than max_integrity until you want your part vanished as soon as it takes max_integrity.
+	var/armor_points = 60
 	var/broken = FALSE  // If the part is broken; broken parts disable the limbs they're attached to
 
 	var/tier = POWER_ARMOR_GRADE_BASIC  // The tier of the part, needed for balance
@@ -174,28 +177,31 @@ Accepts:
 	user, the wearer
 */
 /obj/item/power_armor_part/proc/on_wearer_left(mob/living/user)
-	if(!user)
+	if(!istype(user))
 		return
 	if(!broken)
 		user.get_bodypart(protected_bodyzone)?.GetComponent(/datum/component/power_armor_damage_interceptor)?.RemoveComponent()
 	else
 		set_limb_disabled(FALSE)
-	var/M
-	for(M in modules)
-		modules[M].on_wearer_left(user)
+	for(var/M in modules)
+		modules[M]?.on_wearer_left(user)
 
 /obj/item/power_armor_part/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1)
 	. = ..(damage_amount, damage_type, damage_flag, sound_effect)
 	if(.)
-		if(obj_integrity <= 0 && !broken)
+		if(obj_integrity <= (max_integrity - armor_points))
 			break_part()
 
 /* Break
 Breaks the part and disables correlated limbs.
 */
 /obj/item/power_armor_part/proc/break_part()
+	if(broken)
+		return
 	broken = TRUE
 	set_limb_disabled(TRUE)
+	for(var/M in modules)
+		modules[M]?.on_part_broken()
 	if(exoskeleton?.wearer)
 		to_chat(exoskeleton.wearer, "<span class='userdanger'>\The [src] took too much damage! It is broken!</span>")
 

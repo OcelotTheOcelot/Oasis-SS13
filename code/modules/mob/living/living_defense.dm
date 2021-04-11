@@ -1,4 +1,3 @@
-
 /mob/living/proc/run_armor_check(def_zone = null, attack_flag = "melee", absorb_text = null, soften_text = null, armour_penetration, penetrated_text)
 	var/armor = getarmor(def_zone, attack_flag)
 
@@ -71,17 +70,19 @@
 		dtype = I.damtype
 
 		if (I.throwforce > 0) //If the weapon's throwforce is greater than zero...
-			if (I.throwhitsound) //...and throwhitsound is defined...
-				playsound(loc, I.throwhitsound, volume, 1, -1) //...play the weapon's throwhitsound.
-			else if(I.hitsound) //Otherwise, if the weapon's hitsound is defined...
-				playsound(loc, I.hitsound, volume, 1, -1) //...play the weapon's hitsound.
-			else if(!I.throwhitsound) //Otherwise, if throwhitsound isn't defined...
-				playsound(loc, 'sound/weapons/genhit.ogg',volume, 1, -1) //...play genhit.ogg.
-
-		else if(!I.throwhitsound && I.throwforce > 0) //Otherwise, if the item doesn't have a throwhitsound and has a throwforce greater than zero...
-			playsound(loc, 'sound/weapons/genhit.ogg', volume, 1, -1)//...play genhit.ogg
-		if(!I.throwforce)// Otherwise, if the item's throwforce is 0...
+			var/obj/item/power_armor_part/P = get_bodypart(check_zone(zone))?.get_power_armor_part()
+			if(P && !P.broken)
+				P.play_attack_sound(I.throwforce, dtype)
+			else
+				if (I.throwhitsound) //...and throwhitsound is defined...
+					playsound(loc, I.throwhitsound, volume, 1, -1) //...play the weapon's throwhitsound.
+				else if(I.hitsound) //Otherwise, if the weapon's hitsound is defined...
+					playsound(loc, I.hitsound, volume, 1, -1) //...play the weapon's hitsound.
+				else //Otherwise, if throwhitsound isn't defined...
+					playsound(loc, 'sound/weapons/genhit.ogg',volume, 1, -1) //...play genhit.ogg.
+		else  // Otherwise, if the item's throwforce is 0...
 			playsound(loc, 'sound/weapons/throwtap.ogg', 1, volume, -1)//...play throwtap.ogg.
+
 		if(!blocked)
 			visible_message("<span class='danger'>[src] is hit by [I]!</span>", \
 							"<span class='userdanger'>You're hit by [I]!</span>")

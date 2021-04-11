@@ -1352,11 +1352,12 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		target.lastattackerckey = user.ckey
 		user.dna.species.spec_unarmedattacked(user, target)
 
-		// Snowflake code for power armor damage interception
+		// Power armor damage interception prevents dismembering and fleshy hit sound
 		var/obj/item/power_armor_part/P = affecting.get_power_armor_part()
-		if(!P || P.broken)
+		if(P && !P.broken)
+			P.play_attack_sound(damage, attack_type)
+		else
 			playsound(target.loc, user.dna.species.attack_sound, 25, 1, -1)
-
 			if(user.limb_destroyer)
 				target.dismembering_strike(user, affecting.body_zone)
 
@@ -1558,7 +1559,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(!I.force)
 		return 0 //item force is zero
 
-	// Snowflake code for power armor damage interception; an armoured bodypart shouldn't leave blood when hit; 
+	// Power armor damage interception; an armored bodypart shouldn't get dismembered or leave blood when hit;
 	var/obj/item/power_armor_part/P = affecting.get_power_armor_part()
 	if(P && !P.broken)
 		return FALSE
