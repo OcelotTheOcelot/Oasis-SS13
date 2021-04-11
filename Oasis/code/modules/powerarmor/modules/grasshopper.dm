@@ -18,16 +18,6 @@
 	. += new /datum/action/innate/power_armor/module/grasshopper_hop
 	return .
 
-/obj/item/power_armor_module/grasshopper/create_overlays_for_part_slot(part_slot)
-	. = ..()
-	if(part_slot != slot)
-		return ..()
-	var/datum/power_armor_overlay/PAO = new
-	PAO.priority = POWER_ARMOR_LAYER_BELT_MODULE_BACK
-	PAO.appearance = mutable_appearance(icon, "torso_back")
-	. += PAO
-	return .
-
 /* Hop
 Makes the wearer leap in their current direction , if they have enough power in their exoskeleton for that.
 */
@@ -38,6 +28,9 @@ Makes the wearer leap in their current direction , if they have enough power in 
 		return
 	var/mob/living/user = E.wearer
 	if(!istype(user))
+		return
+	if(!(user.mobility_flags & MOBILITY_STAND))
+		to_chat(user, "<span class='warning'>You should be standing to jump!</span>")
 		return
 	if(recharging_time > world.time)
 		to_chat(user, "<span class='warning'>\The [src]'s spring mechanism is still reloading!</span>")
