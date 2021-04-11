@@ -13,11 +13,11 @@ Credits:
 	desc = "A complex system of servo-motors designed to support its wearer."
 
 	// Note: we use our own magic to render the exoskeleton
-	icon = null
+	icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'
 	pass_flags = 0
 	alternate_worn_icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'
-	icon_state = ""
-	item_state = ""
+	icon_state = "torso"
+	item_state = "item"
 	var/exoskeleton_parts_icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'  // What we render when there's no part attached
 	layer = BELOW_MOB_LAYER
 
