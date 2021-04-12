@@ -123,7 +123,9 @@ Accepts:
 */
 /obj/item/power_armor_part/proc/detach_module(module_slot)
 	var/obj/item/power_armor_module/module = modules["[module_slot]"]
-	modules["[module_slot]"] = null
+	modules -= "[module_slot]"
+	if(!module)
+		return
 	module.part = null
 	module.forceMove(get_turf(src))
 
@@ -232,7 +234,7 @@ Breaks the part and disables correlated limbs.
 	var/uses_empty_state = FALSE  // If the torso has additional layer for rendering when not occupied
 
 /obj/item/power_armor_part/torso/on_detached()
-	/obj/item/power_armor_module/M = modules["[MODULE_SLOT_BELT]"]
+	var/obj/item/power_armor_module/M = modules["[MODULE_SLOT_BELT]"]
 	if(istype(M))
 		detach_module(M)
 	..()
@@ -277,9 +279,9 @@ Breaks the part and disables correlated limbs.
 
 /obj/item/power_armor_part/l_leg/on_detached()
 	if(istype(exoskeleton))
-		var/item/power_armor_part/torso/T = exoskeleton.parts[EXOSKELETON_SLOT_TORSO]
+		var/obj/item/power_armor_part/torso/T = exoskeleton.parts[EXOSKELETON_SLOT_TORSO]
 		if(istype(T))
-			/obj/item/power_armor_module/M = T.modules["[MODULE_SLOT_BELT]"]
+			var/obj/item/power_armor_module/M = T.modules["[MODULE_SLOT_BELT]"]
 			if(istype(M))
 				T.detach_module(M)
 	..()
@@ -294,9 +296,9 @@ Breaks the part and disables correlated limbs.
 
 /obj/item/power_armor_part/r_leg/on_detached()
 	if(istype(exoskeleton))
-		var/item/power_armor_part/torso/T = exoskeleton.parts[EXOSKELETON_SLOT_TORSO]
+		var/obj/item/power_armor_part/torso/T = exoskeleton.parts[EXOSKELETON_SLOT_TORSO]
 		if(istype(T))
-			/obj/item/power_armor_module/M = T.modules["[MODULE_SLOT_BELT]"]
+			var/obj/item/power_armor_module/M = T.modules["[MODULE_SLOT_BELT]"]
 			if(istype(M))
 				T.detach_module(M)
 	..()

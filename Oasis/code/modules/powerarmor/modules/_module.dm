@@ -10,6 +10,7 @@
 
 	var/locks_hand = FALSE  // If FALSE, the held_item will be deployable, like borgs' tools
 	var/hand_occupied = FALSE  // If the hand is currently occupied
+	var/switch_item_and_module_rendering = FALSE  // If TRUE, the module won't be rendered when the item is deployed and vice versa
 	var/obj/item/held_item_type  // If specified, the module prevents using bare hands when attached, placing item of the given type in the wearer's hands; generally used by modules for arms
 	var/obj/item/held_item  // The representation of the item in the wearer's inventory
 
@@ -123,6 +124,10 @@ Accepts:
 	hand_occupied = TRUE
 	H.put_in_hand(held_item, hand_index, forced = TRUE)
 	H.update_inv_hands()
+	if(switch_item_and_module_rendering)
+		part.exoskeleton.power_armor_overlays -= get_overlays_for_part_slot(part.slot)
+		part.exoskeleton.update_appearances()
+		H.update_inv_wear_suit()
 
 /* Free hand
 If held_item_type is specified, deletes the held_item in the wearer's occupied hand.
@@ -137,6 +142,10 @@ If held_item_type is specified, deletes the held_item in the wearer's occupied h
 	if(!istype(H))
 		return
 	H.update_inv_hands()
+	if(switch_item_and_module_rendering)
+		part.exoskeleton.power_armor_overlays += get_overlays_for_part_slot(part.slot)
+		part.exoskeleton.update_appearances()
+		H.update_inv_wear_suit()
 
 /* Grant actions
 Grants all actions of the module to the wearer.

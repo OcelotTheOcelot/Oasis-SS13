@@ -33,10 +33,13 @@
 
 // Actions used by modules to toggle their tools
 /datum/action/innate/power_armor/module/deploy_tool
-	name = "Toggle tools"
+	name = "Toggle tool"
+	button_icon_state = "held_item"
 
 /datum/action/innate/power_armor/module/deploy_tool/Activate()
-	if(!module)
+	if(!module?.part)
+		return
+	if(module.part.broken)
 		return
 	if(module.hand_occupied)
 		module.free_hand()

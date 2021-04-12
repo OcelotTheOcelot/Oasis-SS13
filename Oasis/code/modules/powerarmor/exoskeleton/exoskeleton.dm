@@ -1,11 +1,11 @@
 /* Power armor system by NDOcelot (#4852)
 Credits:
 	NDOcelot
-		for all the code and most of the sprites;
+		for all the monkey code and most of the sprites;
 	TottalyNotC
 		for his balance recommendations, concepts and sprites of "Pangolin", "Mk.II APA" and "Juggernaut" armor sets;
 	NDHavch1k
-		for his balance recommendations, "Mk.II APA" helmet and "Juggernaut" armor set sprite and willing to helpful (at least I want to believe so).
+		for his balance recommendations, "Mk.II APA" helmet and "Juggernaut" armor set sprite and willing to be helpful.
 */
 
 /obj/item/clothing/suit/armor/exoskeleton
@@ -21,6 +21,7 @@ Credits:
 	var/exoskeleton_parts_icon = 'Oasis/icons/powerarmor/exoskeleton/exoskeleton_basic.dmi'  // What we render when there's no part attached
 	layer = BELOW_MOB_LAYER
 
+	// Be aware that if you remove this, you'll have to register the signal for on_mob_move() yourself.
 	move_sound = list('sound/effects/servostep.ogg')
 
 	strip_delay = 100
@@ -41,7 +42,7 @@ Credits:
 	var/obj/item/stock_parts/cell/cell  // The exoskeleton's power cell
 	var/activated = FALSE  // Determines if the suit is active
 	var/powered = FALSE  // Determines if the suit has a power cell with some charge in it
-	var/power_drain_per_step = 5  // How much power is drained when the wearer moves
+	var/step_power_consumption = 5  // How much power is drained when the wearer moves
 
 	var/additive_slowdown  // How much the attached parts should slow the user down
 	var/eqipment_delay = 0  // How much time it takes to equip the exoskeleton
@@ -230,14 +231,15 @@ Returns:
 		depower()
 		return FALSE
 	if(!cell.use(amount))
-		depower()
+		if(cell.charge <= 0)
+			depower()
 		return FALSE
 	return TRUE
 
 /obj/item/clothing/suit/armor/exoskeleton/on_mob_move()
-	..()
 	if(!QDELETED(cell))
-		drain_power(power_drain_per_step)
+		drain_power(step_power_consumption)
+	..()
 
 /* Activate
 Called when the suit is equipped and powered.
@@ -313,7 +315,8 @@ Accepts:
 Updates the offsets for the icons of the held items to corresponds the offsets of the arms attached.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/update_hand_offsets()
-	// <TODO>
+	// <TODO> Not implemented yet!!
+	return
 
 /obj/item/clothing/suit/armor/exoskeleton/update_icon()
 	..()
@@ -456,6 +459,9 @@ Accepts:
 			playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
 		else
 			if(part)
+				if(equipped)
+					to_chat(user, "<span class='warning'>You can not uninstall modules to \the [src] while you are wearing it!</span>")
+					return
 				if (part.modules.len <= 0)
 					to_chat(user, "<span class='notice'>\The [part] has no modules installed!</span>")
 					return

@@ -4,6 +4,7 @@
 	icon = 'Oasis/icons/powerarmor/modules/plasma_cutter.dmi'
 	slot = MODULE_SLOT_ARM
 	locks_hand = FALSE
+	switch_item_and_module_rendering = TRUE
 	held_item_type = /obj/item/gun/energy/plasmacutter/power_armor_module
 	render_priority = POWER_ARMOR_LAYER_ARM_MODULES
 
@@ -15,13 +16,13 @@
 /datum/action/innate/power_armor/module/deploy_tool/plasma_cutter
 	name = "Toggle plasma cutter"
 	icon_icon = 'Oasis/icons/powerarmor/modules/plasma_cutter.dmi'
-	button_icon_state = "held_item"
 
 /obj/item/gun/energy/plasmacutter/power_armor_module
 	name = "plasma cutter module"
 	desc = "A deployable plasma cutter that uses the exoskeleton's energy."
 	icon = 'Oasis/icons/powerarmor/modules/plasma_cutter.dmi'
 	icon_state = "held_item"
+	item_state = "plasma_cutter"
 	lefthand_file = 'Oasis/icons/powerarmor/modules/in_hands/module_items_lefthand.dmi'
 	righthand_file = 'Oasis/icons/powerarmor/modules/in_hands/module_items_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY

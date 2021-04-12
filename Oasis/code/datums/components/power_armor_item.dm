@@ -12,7 +12,10 @@ Returns:
 	the exoskeleton or null
 */
 /datum/component/power_armor_item/proc/get_exoskeleton()
-	return module && module.part && module.part.exoskeleton
+	var/obj/item/clothing/suit/armor/exoskeleton/E = module?.part?.exoskeleton
+	if(!istype(E))
+		return null
+	return E
 
 /* Get cell
 Helper proc needed to get the component's cell if its module is attached to an exoskeleton
@@ -20,10 +23,7 @@ Returns:
 	the cell of the exoskeleton or null
 */
 /datum/component/power_armor_item/proc/get_cell()
-	var/obj/item/clothing/suit/armor/exoskeleton/E = get_exoskeleton()
-	if(!istype(E))
-		return null
-	return E.cell
+	return get_exoskeleton()?.cell
 
 /* Use cell
 Uses the exoskeleton's cell.
