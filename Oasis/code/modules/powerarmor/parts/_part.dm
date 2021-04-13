@@ -150,8 +150,13 @@ Accepts:
 		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
 		detach_all_modules()
 		to_chat(user, "<span class='notice'>You uninstall all modules from \the [src].</span>")
+	else if(try_apply_item(W, user))
+		return
 	else
-		return ..(W, user, params)
+		for(var/M in modules)
+			if(modules[M]?.try_apply_item(W, user))
+				return
+	return ..(W, user, params)
 
 /* On wearer entered
 Called when the wearer enters the exoskeleton.
@@ -219,8 +224,30 @@ Breaks the part and disables correlated limbs.
 	if(exoskeleton?.wearer)
 		to_chat(exoskeleton.wearer, "<span class='userdanger'>\The [src] took too much damage! It is broken!</span>")
 
+/* Set limb disabled
+Disables the limb covered by this part.
+Sometimes I'm going too far fith conditional nulls Ikr.
+Accepts:
+	disabled, pass TRUE to disable the limb, FALSE to cancel the effect.
+*/
 /obj/item/power_armor_part/proc/set_limb_disabled(disabled = TRUE)
 	exoskeleton?.wearer?.get_bodypart(protected_bodyzone)?.set_disabled(disabled ? BODYPART_DISABLED_OBSTRUCTED : BODYPART_NOT_DISABLED)
+
+/* Try apply item
+Tries to apply an item on the part.
+Called when the part's exoskeleton is attacked with an item.
+Should be be useable in attackby as well.
+Accepts:
+	I, the item that the user tries to apply
+	user, the mob applying the item
+Returns:
+	TRUE if the item was applied successfully, FALSE otherwise; returning TRUE is supposed to prevent other try_apply_item and attackby interactions 
+*/
+/obj/item/power_armor_part/proc/try_apply_item(obj/item/I, mob/user)
+	for(var/M in modules)
+		if(modules[M]?.try_apply_item(I, user))
+			return TRUE
+	return FALSE
 
 /obj/item/power_armor_part/torso
 	slot = EXOSKELETON_SLOT_TORSO

@@ -208,3 +208,21 @@ Returns:
 	if(!E.parts[EXOSKELETON_SLOT_R_LEG] || E.parts[EXOSKELETON_SLOT_R_LEG].broken)
 		return FALSE
 	return TRUE
+
+/* Try apply item
+Tries to apply an item on the module.
+Called when the module's part is attacked with an item or when the part's try_apply_item is called.
+Should be be useable in attackby as well.
+Accepts:
+	I, the item that the user tries to apply
+	user, the mob applying the item
+Returns:
+	TRUE if the item was applied successfully, FALSE otherwise; returning TRUE is supposed to prevent other try_apply_item and attackby interactions 
+*/
+/obj/item/power_armor_module/proc/try_apply_item(obj/item/I, mob/user)
+	return FALSE
+
+/obj/item/power_armor_module/attackby(obj/item/W, mob/user, params)
+	if(try_apply_item(W, user))
+		return
+	return ..(W, user, params)

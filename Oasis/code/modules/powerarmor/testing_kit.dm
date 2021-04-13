@@ -31,5 +31,6 @@
 	new /obj/item/power_armor_module/mining_drill(loc)
 	new /obj/item/power_armor_module/plasma_cutter(loc)  // <DONE>
 	new /obj/item/power_armor_module/plasma_cutter(loc)  // <DONE>
+	new /obj/item/power_armor_module/plasma_generator(loc)
 
 	QDEL_NULL(src)

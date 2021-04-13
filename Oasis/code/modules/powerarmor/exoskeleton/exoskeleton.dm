@@ -145,7 +145,7 @@ Couldn't be implemented with for loop because of different render layers.
 		if(slowdown < 0)
 			to_chat(user, "<span class='notice'>Your movement becomes more free and your limbs feel more lightweight!</span>")
 		else if(!powered)
-			to_chat(user, "<span class='warning'>Your limbs can hardly move in this unpowered [src]...</span>")
+			to_chat(user, "<span class='warning'>Your limbs can hardly move in this unpowered [name]...</span>")
 		else
 			to_chat(user, "<span class='notice'>It's difficult to move in this bulky suit...</span>")
 
@@ -434,6 +434,8 @@ Accepts:
 /obj/item/clothing/suit/armor/exoskeleton/attackby(obj/item/W, mob/user, params)
 	var/equipped = is_equipped(user)
 	var/bare = parts.len <= 0
+	var/selected_part_slot = zone_to_exoskeleton_slot(user.zone_selected)
+	var/obj/item/power_armor_part/selected_part = parts[selected_part_slot]
 
 	// Behold, horrible if-else spaghetti code!!
 	if(panel_opened && istype(W, /obj/item/stock_parts/cell))
@@ -449,27 +451,25 @@ Accepts:
 				power()
 
 	else if(W.tool_behaviour == TOOL_SCREWDRIVER)
-		var/selected_part_slot = zone_to_exoskeleton_slot(user.zone_selected)
-		var/obj/item/power_armor_part/part = parts[selected_part_slot]
-		if((selected_part_slot == EXOSKELETON_SLOT_TORSO) && !istype(part))
-			panel_opened = !panel_opened
-			update_appearances()
-			update_icon()
-			to_chat(user, "<span class='notice'>You [panel_opened ? "open" : "close"] the maintenance panel.</span>")
-			playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
-		else
-			if(part)
-				if(equipped)
-					to_chat(user, "<span class='warning'>You can not uninstall modules to \the [src] while you are wearing it!</span>")
-					return
-				if (part.modules.len <= 0)
-					to_chat(user, "<span class='notice'>\The [part] has no modules installed!</span>")
-					return
+		if(!selected_part)
+			if(selected_part_slot == EXOSKELETON_SLOT_TORSO)
+				panel_opened = !panel_opened
+				update_appearances()
+				update_icon()
+				to_chat(user, "<span class='notice'>You [panel_opened ? "open" : "close"] the maintenance panel.</span>")
 				playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
-				part.detach_all_modules()
-				to_chat(user, "<span class='notice'>You uninstall all modules from \the [part].</span>")
 			else
 				to_chat(user, "<span class='notice'>There's no part to take modules from!</span>")
+			return
+		if(equipped)
+			to_chat(user, "<span class='warning'>You can not uninstall modules to \the [src] while you are wearing it!</span>")
+			return
+		if (selected_part.modules.len <= 0)
+			to_chat(user, "<span class='notice'>\The [selected_part] has no modules installed!</span>")
+			return
+		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+		selected_part.detach_all_modules()
+		to_chat(user, "<span class='notice'>You uninstall all modules from \the [selected_part].</span>")
 
 	else if(istype(W, /obj/item/power_armor_part))
 		if(equipped)
@@ -501,7 +501,7 @@ Accepts:
 					if(parts[P] && !parts[P].pauldron_compatible)
 						to_chat(user, "<span class='warning'>\The [part]'s pauldrons are incompatible with \the [P]!</span>")
 						return
-		var/obj/item/power_armor_part/previous_part = parts[part.slot]
+		var/obj/item/power_armor_part/previous_part = parts[part.slot]  // Should be safer than using selected_part y'know
 		if(previous_part)
 			to_chat(user, "<span class='warning'>This junction is already occupied by \the [previous_part]!</span>")
 			return
@@ -524,15 +524,13 @@ Accepts:
 				to_chat(user, "<span class='notice'>You disassemble \the [src].</span>")
 				disassemble()
 		else
-			var/slot = zone_to_exoskeleton_slot(user.zone_selected)
-			var/obj/item/power_armor_part/part = parts[slot]
-			if(part)
-				to_chat(user, "<span class='notice'>You begin to detach \the [part] from \the [src]...</span>")
+			if(selected_part)
+				to_chat(user, "<span class='notice'>You begin to detach \the [selected_part] from \the [src]...</span>")
 				W.play_tool_sound(src)
-				if(do_after(user, part.detachment_speed, target = src))
-					detach_part(slot)
+				if(do_after(user, selected_part.detachment_speed, target = src))
+					detach_part(selected_part_slot)
 					playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
-					to_chat(user, "<span class='notice'>You detach \the [part] from \the [src].</span>")
+					to_chat(user, "<span class='notice'>You detach \the [selected_part] from \the [src].</span>")
 			else
 				to_chat(user, "<span class='warning'>There's nothing to detach from this junction!</span>")
 
@@ -540,18 +538,18 @@ Accepts:
 		if(equipped)
 			to_chat(user, "<span class='warning'>You can not attach modules to \the [src] while you are wearing it!</span>")
 			return
-		var/obj/item/power_armor_module/module = W
-		var/obj/item/power_armor_part/part = parts[zone_to_exoskeleton_slot(user.zone_selected)]
-		if(part)
-			if(part.can_accept_module(module) && user.transferItemToLoc(W, part))
+		if(selected_part)
+			if(selected_part.can_accept_module(W) && user.transferItemToLoc(W, selected_part))
 				playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
-				part.attach_module(module)
-				to_chat(user, "<span class='notice'>You install \the [module] in \the [part].</span>")
+				selected_part.attach_module(W)
+				to_chat(user, "<span class='notice'>You install \the [W] in \the [selected_part].</span>")
 			else
-				to_chat(user, "<span class='warning'>\The [module] can not fit into \the [part]!</span>")
+				to_chat(user, "<span class='warning'>\The [W] can not fit into \the [selected_part]!</span>")
 		else
 			to_chat(user, "<span class='notice'>There's no part to hold this module!</span>")
 
-	else
-		return ..(W, user, params)
+	else if(selected_part?.try_apply_item(W, user))
+		return
+
+	return ..(W, user, params)
  

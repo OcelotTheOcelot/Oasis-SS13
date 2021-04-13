@@ -21,16 +21,6 @@
 	. += new /datum/action/innate/power_armor/module/self_destruction
 	return .
 
-/obj/item/power_armor_module/self_destruction/create_overlays_for_part_slot(part_slot)
-	. = ..()
-	if(part_slot != slot)
-		return ..()
-	var/datum/power_armor_overlay/PAO = new
-	PAO.priority = POWER_ARMOR_LAYER_CHEST_MODULE_BACK
-	PAO.appearance = mutable_appearance(icon, "torso_back")
-	. += PAO
-	return .
-
 /obj/item/power_armor_module/self_destruction/emp_reaction()
 	trigger()
 
