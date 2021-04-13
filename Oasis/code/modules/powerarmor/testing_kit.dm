@@ -31,6 +31,9 @@
 	new /obj/item/power_armor_module/mining_drill(loc)
 	new /obj/item/power_armor_module/plasma_cutter(loc)  // <DONE>
 	new /obj/item/power_armor_module/plasma_cutter(loc)  // <DONE>
+	
 	new /obj/item/power_armor_module/plasma_generator(loc)
+	new /obj/item/stack/sheet/mineral/plasma/fifty(loc)
+	new /obj/item/stock_parts/cell/high/empty(loc)
 
 	QDEL_NULL(src)

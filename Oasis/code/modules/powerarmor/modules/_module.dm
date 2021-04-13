@@ -226,3 +226,15 @@ Returns:
 	if(try_apply_item(W, user))
 		return
 	return ..(W, user, params)
+
+/* On detached
+Called when the module is detached from the part.
+*/
+/obj/item/power_armor_module/proc/on_detached()
+	return
+
+/* On attached
+Called when the module is attached to a part.
+*/
+/obj/item/power_armor_module/proc/on_attached()
+	return

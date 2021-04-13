@@ -113,10 +113,8 @@ Returns:
 		to_chat(user, "<span class='warning'>\The [src] can't be activated due to the lack of power!</span>")
 
 /obj/item/pickaxe/drill/power_armor_module/process()
-	. = ..()  // For we never know when the original drill's code will use process
 	if(!exoskeleton)
 		return PROCESS_KILL
 	if(enabled && !exoskeleton.drain_power(power_consumption))
 		toggle()
 		return PROCESS_KILL
-	return .

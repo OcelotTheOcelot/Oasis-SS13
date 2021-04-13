@@ -198,10 +198,13 @@ Helper proc used to recalculate and update current slowdown.
 	slowdown = (activated ? bare_slowdown : initial(slowdown)) + additive_slowdown
 
 /* Power
-Called when the cell is inserted.
+Called when the cell is inserted or recharged.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/power()
+	if(powered)
+		return
 	powered = TRUE
+	to_chat(wearer, "<span class='notice'>\The [src]'s power has been restored!</span>")
 	if(!activated)
 		activate()
 
@@ -209,6 +212,8 @@ Called when the cell is inserted.
 Called when the cell is dead or taken off.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/depower()
+	if(!powered)
+		return
 	powered = FALSE
 	if(!QDELETED(wearer))
 		if(QDELETED(cell))
@@ -218,27 +223,41 @@ Called when the cell is dead or taken off.
 	deactivate()
 
 /* Drain power
-Drains some amount of power from cell.
+Drains some amount of power from the cell.
 Accepts:
 	amount, the amount of power to drain
 Returns:
-	TRUE if cell was used successfully, FALSE if it's dead 
+	TRUE if cell was used successfully, FALSE if it's dead or missing
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/drain_power(amount)
-	if(!powered)
-		return FALSE
 	if(QDELETED(cell))
 		depower()
 		return FALSE
-	if(!cell.use(amount))
+	if(!cell?.use(amount))
 		if(cell.charge <= 0)
 			depower()
 		return FALSE
 	return TRUE
 
+/* Charge
+Charges the exoskeleton's cell.
+Accepts:
+	amount, the amount of power to charge the cell with
+Returns:
+	the amount of power given to the cell or 0 if it's missing 
+*/
+/obj/item/clothing/suit/armor/exoskeleton/proc/charge(amount)
+	var/power_used = 0
+	if(QDELETED(cell))
+		depower()
+		return power_used
+	power_used = cell.give(amount)
+	if(power_used > 0)
+		power()
+	return power_used
+
 /obj/item/clothing/suit/armor/exoskeleton/on_mob_move()
-	if(!QDELETED(cell))
-		drain_power(step_power_consumption)
+	drain_power(step_power_consumption)
 	..()
 
 /* Activate

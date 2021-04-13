@@ -99,6 +99,7 @@ Accepts:
 /obj/item/power_armor_part/proc/attach_module(obj/item/power_armor_module/module)
 	modules["[module.slot]"] = module
 	module.part = src
+	module.on_attached()
 
 	var/list/module_overlays = module.get_overlays_for_part_slot(slot)
 	power_armor_overlays |= module_overlays
@@ -128,6 +129,7 @@ Accepts:
 		return
 	module.part = null
 	module.forceMove(get_turf(src))
+	module.on_detached()
 
 	var/list/module_overlays = module.get_overlays_for_part_slot(slot)
 	power_armor_overlays -= module_overlays
