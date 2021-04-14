@@ -46,33 +46,43 @@ Makes the module go boom
 		)
 	QDEL_NULL(src)
 
+/obj/item/power_armor_module/self_destruction/on_wearer_entered()
+	..()
+	if(detonation_mode == SELF_DESTRUCTION_MODE_ON_CRIT || detonation_mode == SELF_DESTRUCTION_MODE_ON_DEATH)
+		START_PROCESSING(SSobj, src)
+
 /obj/item/power_armor_module/self_destruction/on_wearer_left()
 	..()
+	STOP_PROCESSING(SSobj, src)
 	if(detonation_mode == SELF_DESTRUCTION_MODE_ON_UNEQUIP)
 		trigger()
 
 /obj/item/power_armor_module/self_destruction/process()
-	// Note: we shouldn't cease this process if there's no wearer; they or someone else may enter the exoskeleton and the module should keep working.
+	if(!part?.exoskeleton?.wearer)
+		return PROCESS_KILL
 	switch(detonation_mode)
 		if(SELF_DESTRUCTION_MODE_ON_CRIT)
-			if(part?.exoskeleton?.wearer?.InCritical())
+			if(part.exoskeleton.wearer.InCritical())
 				trigger()
 		if(SELF_DESTRUCTION_MODE_ON_DEATH)
-			if(part?.exoskeleton?.wearer?.stat == DEAD)
+			if(part.exoskeleton.wearer.stat == DEAD)
 				trigger()
 		else
 			return PROCESS_KILL
 
+// Note: we don't use try_apply_item for mode switching!
 /obj/item/power_armor_module/self_destruction/attackby(obj/item/W, mob/user, params)
 	if(W.tool_behaviour == TOOL_MULTITOOL)
 		detonation_mode = (detonation_mode + 1) % SELF_DESTRUCTION_MODES
 		var/mode_desc = "only manually"
+		var/span_class = "notice"
 		switch(detonation_mode)
 			if(SELF_DESTRUCTION_MODE_MANUAL_ONLY)
 				STOP_PROCESSING(SSobj, src)
 			if(SELF_DESTRUCTION_MODE_ON_UNEQUIP)
 				STOP_PROCESSING(SSobj, src)
-				mode_desc = "when the wearer leaves the exoskeleton. <boldwarning>This is one-way road</boldwarning>"
+				mode_desc = "when the wearer leaves the exoskeleton. This is one-way road"
+				span_class = "boldwarning"
 			if(SELF_DESTRUCTION_MODE_ON_CRIT)
 				START_PROCESSING(SSobj, src)
 				mode_desc = "when the wearer reaches critical health condition"
@@ -80,7 +90,7 @@ Makes the module go boom
 				START_PROCESSING(SSobj, src)
 				mode_desc = "when the wearer dies"
 
-		to_chat(user, "<span class='notice'>\The [src] will now be triggered [mode_desc].</span>")
+		to_chat(user, "<span class='[span_class]'>\The [src] will now be triggered [mode_desc].</span>")
 
 /datum/action/innate/power_armor/module/self_destruction
 	name = "Initiate self-destruction"
@@ -89,6 +99,8 @@ Makes the module go boom
 	button_icon_state = "self_destruction_action"
 
 /datum/action/innate/power_armor/module/self_destruction/Activate()
+	if(!(owner.stat == CONSCIOUS || owner.stat == SOFT_CRIT))
+		return
 	var/obj/item/power_armor_module/self_destruction/M = module
 	if(istype(M))
 		M.trigger()

@@ -4,6 +4,7 @@
 	new /obj/item/screwdriver(loc)
 	new /obj/item/wrench(loc)
 	new /obj/item/stock_parts/cell/high/plus(loc)
+	// new /obj/item/stock_parts/cell/high/empty(loc)
 
 	// new /obj/item/clothing/suit/armor/exoskeleton(loc)
 
@@ -26,18 +27,12 @@
 	new /obj/item/power_armor_part/r_leg/cherub(loc)
 
 	new /obj/item/power_armor_module/hydraulic_clamp(loc)
-	new /obj/item/power_armor_module/grasshopper(loc)
-	new /obj/item/power_armor_module/mining_drill(loc)
-	new /obj/item/power_armor_module/mining_drill(loc)
-	new /obj/item/power_armor_module/plasma_cutter(loc)  // <DONE>
-	new /obj/item/power_armor_module/plasma_cutter(loc)  // <DONE>
-	
-	/*
-	new /obj/item/power_armor_module/plasma_generator(loc)  // <DONE>
-	new /obj/item/stack/sheet/mineral/plasma/fifty(loc)
-	new /obj/item/stock_parts/cell/high/empty(loc)
-	*/
+	// new /obj/item/power_armor_module/plasma_cutter(loc)  // <DONE>
+	// new /obj/item/power_armor_module/grasshopper(loc)  // <DONE>
+	// new /obj/item/power_armor_module/mining_drill(loc)  // <DONE>
+	// new /obj/item/power_armor_module/plasma_generator(loc)  // <DONE>
+	// new /obj/item/power_armor_module/self_destruction(loc)  // <DONE>
 
-	new /obj/item/power_armor_module/self_destruction(loc)
+	new /obj/item/power_armor_module/stimpack(loc)
 
 	QDEL_NULL(src)
