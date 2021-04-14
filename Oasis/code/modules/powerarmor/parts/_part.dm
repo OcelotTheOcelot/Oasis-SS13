@@ -143,13 +143,13 @@ Accepts:
 	if(istype(W, /obj/item/power_armor_module))
 		var/obj/item/power_armor_module/module = W
 		if(can_accept_module(module) && user.transferItemToLoc(W, src))
-			playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+			playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 			attach_module(module)
 			to_chat(user, "<span class='warning'>You install \the [module] in \the [src].</span>")
 		else
 			to_chat(user, "<span class='warning'>\The [module] can not fit into \the [src]!</span>")
 	else if(W.tool_behaviour == TOOL_SCREWDRIVER)
-		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+		playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 		detach_all_modules()
 		to_chat(user, "<span class='notice'>You uninstall all modules from \the [src].</span>")
 	else if(try_apply_item(W, user))

@@ -415,7 +415,7 @@ Accepts:
 			cell.forceMove(get_turf(src))
 			to_chat(user, "<span class='notice'>You remove \the [cell] from \the [src].</span>")
 			cell = null
-			playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+			playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 			depower()
 		else
 			to_chat(user, "<span class='warning'>There is no power cell in \the [src]!</span>")
@@ -465,7 +465,7 @@ Accepts:
 				return
 			cell = W
 			to_chat(user, "<span class='notice'>You install \the [W] in \the [src].</span>")
-			playsound(src.loc, 'sound/machines/click.ogg', 10, 1)
+			playsound(src.loc, 'sound/machines/click.ogg', 10, TRUE)
 			if(!powered)
 				power()
 
@@ -476,7 +476,7 @@ Accepts:
 				update_appearances()
 				update_icon()
 				to_chat(user, "<span class='notice'>You [panel_opened ? "open" : "close"] the maintenance panel.</span>")
-				playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+				playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 			else
 				to_chat(user, "<span class='notice'>There's no part to take modules from!</span>")
 			return
@@ -486,7 +486,7 @@ Accepts:
 		if (selected_part.modules.len <= 0)
 			to_chat(user, "<span class='notice'>\The [selected_part] has no modules installed!</span>")
 			return
-		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+		playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 		selected_part.detach_all_modules()
 		to_chat(user, "<span class='notice'>You uninstall all modules from \the [selected_part].</span>")
 
@@ -528,7 +528,7 @@ Accepts:
 		other_item.play_tool_sound(src)
 		if(do_after(user, part.attachment_speed, target = src) && user.transferItemToLoc(W, src))
 			attach_part(part)
-			playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+			playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 			to_chat(user, "<span class='notice'>You attach \the [W] to \the [src].</span>")
 
 	else if(W.tool_behaviour == TOOL_WRENCH)
@@ -539,7 +539,7 @@ Accepts:
 			to_chat(user, "<span class='notice'>You begin disassembling \the [src]...</span>")
 			W.play_tool_sound(src)
 			if(do_after(user, disassemble_speed, target = src))
-				playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+				playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 				to_chat(user, "<span class='notice'>You disassemble \the [src].</span>")
 				disassemble()
 		else
@@ -548,7 +548,7 @@ Accepts:
 				W.play_tool_sound(src)
 				if(do_after(user, selected_part.detachment_speed, target = src))
 					detach_part(selected_part_slot)
-					playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+					playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 					to_chat(user, "<span class='notice'>You detach \the [selected_part] from \the [src].</span>")
 			else
 				to_chat(user, "<span class='warning'>There's nothing to detach from this junction!</span>")
@@ -559,7 +559,7 @@ Accepts:
 			return
 		if(selected_part)
 			if(selected_part.can_accept_module(W) && user.transferItemToLoc(W, selected_part))
-				playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+				playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 				selected_part.attach_module(W)
 				to_chat(user, "<span class='notice'>You install \the [W] in \the [selected_part].</span>")
 			else

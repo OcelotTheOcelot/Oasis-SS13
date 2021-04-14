@@ -3,18 +3,19 @@
 #define SELF_DESTRUCTION_MODE_ON_CRIT 2
 #define SELF_DESTRUCTION_MODE_ON_DEATH 3
 
-#define SELF_DESTRUCTION_MODES 2  // <TODO> Set to 4 only when other mods are implemented!!
+#define SELF_DESTRUCTION_MODES 4
 
 /obj/item/power_armor_module/self_destruction
 	name = "self-destruction module"
-	desc = "A device containing explosive charge that can be triggered manually or under certain conditions."  //<TODO> implement the other mods! " Use <b>multitool</b> to specify those conditions."
+	desc = "A device containing explosive charge that can be triggered manually or under certain conditions. Use <b>multitool</b> to specify those conditions."
 	icon = 'Oasis/icons/powerarmor/modules/self_destruction.dmi'
 	slot = MODULE_SLOT_CHESTPLATE
 	locks_hand = FALSE
 	held_item_type = /obj/item/hydraulic_clamp
 	render_priority = POWER_ARMOR_LAYER_CHEST_MODULE_FRONT
 
-	var/detonation_mode = SELF_DESTRUCTION_MODE_MANUAL_ONLY
+	var/detonation_mode = SELF_DESTRUCTION_MODE_MANUAL_ONLY  // What triggers the self-destruction system 
+	var/delay = 30 // The delay before the explosion 
 
 /obj/item/power_armor_module/self_destruction/create_module_actions()
 	. = ..()
@@ -25,11 +26,18 @@
 	trigger()
 
 /* Trigger
-Makes the module go boom
+Starts the countdown befoore the explosion
 */
 /obj/item/power_armor_module/self_destruction/proc/trigger()
-	if(part && part.exoskeleton)
-		part.exoskeleton.visible_message("<span class='boldwarning'>Warning: self-destruction sequence has been initiated!</span>")
+	part?.exoskeleton?.wearer?.visible_message("<span class='boldwarning'>Warning: self-destruction sequence has been initiated!</span>")
+	// playsound(src, 'sound/weapons/armbomb.ogg', 100, FALSE)
+	playsound(src, 'sound/machines/triple_beep.ogg', 100, FALSE)
+	addtimer(CALLBACK(src, .proc/explode), delay, TIMER_UNIQUE)
+
+/* Explode
+Makes the module go boom
+*/
+/obj/item/power_armor_module/self_destruction/proc/explode()
 	explosion(loc, 1, 2, 4, 3,
 		adminlog = TRUE,
 		ignorecap = FALSE,
@@ -43,16 +51,33 @@ Makes the module go boom
 	if(detonation_mode == SELF_DESTRUCTION_MODE_ON_UNEQUIP)
 		trigger()
 
+/obj/item/power_armor_module/self_destruction/process()
+	// Note: we shouldn't cease this process if there's no wearer; they or someone else may enter the exoskeleton and the module should keep working.
+	switch(detonation_mode)
+		if(SELF_DESTRUCTION_MODE_ON_CRIT)
+			if(part?.exoskeleton?.wearer?.InCritical())
+				trigger()
+		if(SELF_DESTRUCTION_MODE_ON_DEATH)
+			if(part?.exoskeleton?.wearer?.stat == DEAD)
+				trigger()
+		else
+			return PROCESS_KILL
+
 /obj/item/power_armor_module/self_destruction/attackby(obj/item/W, mob/user, params)
 	if(W.tool_behaviour == TOOL_MULTITOOL)
 		detonation_mode = (detonation_mode + 1) % SELF_DESTRUCTION_MODES
 		var/mode_desc = "only manually"
 		switch(detonation_mode)
+			if(SELF_DESTRUCTION_MODE_MANUAL_ONLY)
+				STOP_PROCESSING(SSobj, src)
 			if(SELF_DESTRUCTION_MODE_ON_UNEQUIP)
-				mode_desc = "when the wearer leaves the exoskeleton"
+				STOP_PROCESSING(SSobj, src)
+				mode_desc = "when the wearer leaves the exoskeleton. <boldwarning>This is one-way road</boldwarning>"
 			if(SELF_DESTRUCTION_MODE_ON_CRIT)
+				START_PROCESSING(SSobj, src)
 				mode_desc = "when the wearer reaches critical health condition"
-			if(SELF_DESTRUCTION_MODE_ON_CRIT)
+			if(SELF_DESTRUCTION_MODE_ON_DEATH)
+				START_PROCESSING(SSobj, src)
 				mode_desc = "when the wearer dies"
 
 		to_chat(user, "<span class='notice'>\The [src] will now be triggered [mode_desc].</span>")
