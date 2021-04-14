@@ -32,7 +32,6 @@
 	// new /obj/item/power_armor_module/mining_drill(loc)  // <DONE>
 	// new /obj/item/power_armor_module/plasma_generator(loc)  // <DONE>
 	// new /obj/item/power_armor_module/self_destruction(loc)  // <DONE>
-
-	new /obj/item/power_armor_module/stimpack(loc)
+	// new /obj/item/power_armor_module/stimpack(loc)  // <DONE>
 
 	QDEL_NULL(src)
