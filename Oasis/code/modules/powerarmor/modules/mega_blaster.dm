@@ -23,6 +23,9 @@
 	dead_cell = FALSE
 	can_charge = FALSE
 	ammo_type = list(/obj/item/ammo_casing/energy/mega_blast_light,  /obj/item/ammo_casing/energy/mega_blast_charged)
+	var/charged_shots = FALSE  // If the gun is set to fire charged shots 
+	var/charged_shot_delay = 10  // How much time passes between the click and the charged shot
+	var/charging = FALSE  // If the gun is currently firing charged shots
 
 /obj/item/gun/energy/mega_blaster/Initialize()
 	. = ..()
@@ -46,10 +49,26 @@
 
 /obj/item/gun/energy/mega_blaster/select_fire(mob/living/user)
 	..()
-	if(istype(ammo_type[select], /obj/item/ammo_casing/energy/mega_blast_charged))
-		charge_delay = 5
+	charged_shots = istype(ammo_type[select], /obj/item/ammo_casing/energy/mega_blast_charged)
+	if(charged_shots)
+		charge_delay = 10
 	else
 		charge_delay = 1
+
+/obj/item/gun/energy/mega_blaster/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
+	if(charged_shots)
+		if(charging)
+			return FALSE
+		charging = TRUE
+		playsound(src.loc, 'Oasis/sound/powerarmor/mega_blaster_charging.ogg', 30, TRUE)  //Fuck fuck fuck fuck fuck fuck fuck
+		if(!do_after(user, charged_shot_delay, target = src, progress = FALSE))
+			charging = FALSE
+			return FALSE
+	return ..(target, user, message, params, zone_override, bonus_spread)
+
+/obj/item/gun/energy/mega_blaster/process_chamber()
+	charging = FALSE	
+	. = ..()
 
 /obj/item/ammo_casing/energy/mega_blast_light
 	projectile_type = /obj/item/projectile/mega_blast_light
@@ -61,7 +80,7 @@
 	name = "mini blast"
 	icon = 'Oasis/icons/obj/projectiles.dmi'
 	icon_state = "mega_blast_light"
-	damage = 8
+	damage = 4
 	range = 6
 	damage_type = BURN
 	ricochet_chance = 40
@@ -70,13 +89,13 @@
 	projectile_type = /obj/item/projectile/mega_blast_charged
 	select_name = "charged shots"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	e_cost = 1000
+	e_cost = 500
 
 /obj/item/projectile/mega_blast_charged
 	name = "mega blast"
 	icon = 'Oasis/icons/obj/projectiles.dmi'
 	icon_state = "mega_blast_charged"
-	damage = 24
+	damage = 32
 	range = 8
 	damage_type = BURN
 	ricochet_chance = 0

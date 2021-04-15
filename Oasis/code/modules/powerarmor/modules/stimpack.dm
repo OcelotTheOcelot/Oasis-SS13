@@ -138,14 +138,14 @@ Accepts:
 	target, the mob receiving the message
 	text, the text to print in the chat
 */
-/obj/item/power_armor_module/stimpack/proc/state(mob/target, text="")
+/obj/item/power_armor_module/stimpack/proc/state(mob/target, text = "")
 	if(target)
 		to_chat(target, "<span class='robot'>\The [src] states, \"[text]\".</span>")
 
 /* Eject syringes
 Drops all stored syringes on floor.
 */
-/obj/item/power_armor_module/stimpack/proc/eject_syringes(mob/target, text="")
+/obj/item/power_armor_module/stimpack/proc/eject_syringes(mob/target, text = "")
 	for(var/obj/item/reagent_containers/S in syringes)
 		S.forceMove(get_turf(src))
 		syringes.Remove(S)

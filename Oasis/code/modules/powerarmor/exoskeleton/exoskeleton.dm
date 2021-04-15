@@ -367,7 +367,7 @@ The mutable_appearance's are extracted from power_armor_overlays.
 			overlays_to_render += exoskeleton_overlays["[EXOSKELETON_SLOT_TORSO]_opened"]
 			continue
 		overlays_to_render += exoskeleton_overlays[part_slot]
-	for(var/datum/power_armor_overlay/PAO in sortTim(overlays_to_render, cmp=/proc/cmp_power_armor_overlays_render_order, associative = FALSE))
+	for(var/datum/power_armor_overlay/PAO in sortTim(overlays_to_render, cmp = /proc/cmp_power_armor_overlays_render_order, associative = FALSE))
 		appearances += PAO.appearance
 
 /* Disassemble
@@ -403,7 +403,7 @@ Accepts:
 	if(!is_equipped(user))
 		return
 	to_chat(user, "<span class='notice'>You begin to eject yourself from \the [src]...</span>")
-	if(do_after(user, eqipment_delay, target = src) && user.dropItemToGround(src, TRUE))
+	if(do_after(user, eqipment_delay, target = user) && user.dropItemToGround(src, TRUE))
 		user.update_inv_wear_suit()
 		dir = user.dir
 		to_chat(user, "<span class='notice'>You eject yourself from \the [src].</span>")

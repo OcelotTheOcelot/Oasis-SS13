@@ -110,7 +110,7 @@ Returns:
 			continue
 		if(parts[slot].obj_integrity < parts[slot].max_integrity)
 			damaged_parts += parts[slot]
-	damaged_parts = sortTim(damaged_parts, cmp=/proc/cmp_power_armor_parts_integrity, associative = FALSE)
+	damaged_parts = sortTim(damaged_parts, cmp = /proc/cmp_power_armor_parts_integrity, associative = FALSE)
 	return damaged_parts
 
 /* State
@@ -134,5 +134,10 @@ Accepts:
 	var/obj/item/power_armor_module/auto_repair_kit/M = module
 	if(istype(M))
 		M.toggle_auto_repair()
-		button_icon_state = "repair_action_[M.active ? "on" : "off"]"
-		UpdateButtonIcon()
+
+/datum/action/innate/power_armor/module/toggle_auto_repair/UpdateButtonIcon()
+	var/obj/item/power_armor_module/auto_repair_kit/M = module
+	button_icon_state = initial(button_icon_state)
+	if(istype(M) && M.active)
+		button_icon_state = "repair_action_on"
+	..()
