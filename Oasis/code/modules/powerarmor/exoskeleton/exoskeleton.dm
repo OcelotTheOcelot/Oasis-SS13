@@ -3,9 +3,9 @@ Credits:
 	NDOcelot
 		for all the monkey code and most of the sprites;
 	TottalyNotC
-		for his balance recommendations, concepts and sprites of "Pangolin", "Mk.II APA" and "Juggernaut" armor sets;
+		for his balance recommendations, concepts and sprites of "Pangolin", "Mk.II APA" "Juggernaut" armor sets and stimpack module;
 	NDHavch1k
-		for his balance recommendations, "Mk.II APA" helmet and "Juggernaut" armor set sprite and willing to be helpful.
+		for his balance recommendations, "Mk.II APA" helmet and "Juggernaut" armor set sprites and willing to be helpful.
 */
 
 /obj/item/clothing/suit/armor/exoskeleton
