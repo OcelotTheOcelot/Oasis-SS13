@@ -85,6 +85,10 @@
 	state(part?.exoskeleton?.wearer, "Goodbye and be safe!")
 	STOP_PROCESSING(SSobj, src)
 
+/obj/item/power_armor_module/stimpack/emp_reaction()
+	state(part.exoskeleton.wearer, "Warning: 4f%@%63##65>6c&%^#6f!?.74! Performing injection...")
+	inject()
+
 /obj/item/power_armor_module/stimpack/process()
 	if(syringes.len <= 0)
 		return PROCESS_KILL
