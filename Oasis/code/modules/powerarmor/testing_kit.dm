@@ -27,6 +27,7 @@
 	new /obj/item/power_armor_part/r_leg/cherub(loc)
 
 	new /obj/item/power_armor_module/hydraulic_clamp(loc)
+	// new /obj/item/power_armor_module/magnetic_clamp(loc)
 	// new /obj/item/power_armor_module/plasma_cutter(loc)  // <DONE>
 	// new /obj/item/power_armor_module/grasshopper(loc)  // <DONE>
 	// new /obj/item/power_armor_module/mining_drill(loc)  // <DONE>
@@ -36,5 +37,6 @@
 	// new /obj/item/power_armor_module/mandible(loc)  // <DONE>
 	// new /obj/item/power_armor_module/auto_repair_kit(loc)  // <DONE>
 	new /obj/item/power_armor_module/mega_blaster(loc)  // <TODO> We should implement beamrifles' charging
+	new /obj/item/power_armor_module/defibrillator(loc)
 
 	QDEL_NULL(src)

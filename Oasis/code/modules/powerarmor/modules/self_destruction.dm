@@ -11,7 +11,6 @@
 	icon = 'Oasis/icons/powerarmor/modules/self_destruction.dmi'
 	slot = MODULE_SLOT_CHESTPLATE
 	locks_hand = FALSE
-	held_item_type = /obj/item/hydraulic_clamp
 	render_priority = POWER_ARMOR_LAYER_CHEST_MODULE_FRONT
 
 	var/detonation_mode = SELF_DESTRUCTION_MODE_MANUAL_ONLY  // What triggers the self-destruction system 
