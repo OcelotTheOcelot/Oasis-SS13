@@ -55,11 +55,12 @@
 	projectile_type = /obj/item/projectile/mega_blast_light
 	select_name = "quick shots"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	e_cost = 50
+	e_cost = 100
 
 /obj/item/projectile/mega_blast_light
 	name = "mini blast"
-	icon_state = "pulse1"
+	icon = 'Oasis/icons/obj/projectiles.dmi'
+	icon_state = "mega_blast_light"
 	damage = 8
 	range = 6
 	damage_type = BURN
@@ -69,11 +70,12 @@
 	projectile_type = /obj/item/projectile/mega_blast_charged
 	select_name = "charged shots"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	e_cost = 200
+	e_cost = 1000
 
 /obj/item/projectile/mega_blast_charged
 	name = "mega blast"
-	icon_state = "pulse1"
+	icon = 'Oasis/icons/obj/projectiles.dmi'
+	icon_state = "mega_blast_charged"
 	damage = 24
 	range = 8
 	damage_type = BURN

@@ -9,8 +9,6 @@
 	desc = "A smart backpack that automatically injects supplied syringes in the user's body. Injection conditions can be configured with <b>multitool</b>."
 	icon = 'Oasis/icons/powerarmor/modules/stimpack.dmi'
 	slot = MODULE_SLOT_BACKPACK
-	locks_hand = FALSE
-	held_item_type = /obj/item/hydraulic_clamp
 	render_priority = POWER_ARMOR_LAYER_BACKPACK_MODULE_FRONT
 
 	// Type of syringes this module can hold
@@ -79,14 +77,12 @@
 
 /obj/item/power_armor_module/stimpack/on_wearer_entered()
 	..()
-	if(part?.exoskeleton?.wearer)
-		state(part.exoskeleton.wearer, "Smart injection system welcomes you. Remember: safety first!")
+	state(part?.exoskeleton?.wearer, "Smart injection system welcomes you. Remember: safety first!")
 	START_PROCESSING(SSobj, src)
 
 /obj/item/power_armor_module/stimpack/on_wearer_left()
-	if(part?.exoskeleton?.wearer)
-		state(part.exoskeleton.wearer, "Goodbye and be safe!")
 	..()
+	state(part?.exoskeleton?.wearer, "Goodbye and be safe!")
 	STOP_PROCESSING(SSobj, src)
 
 /obj/item/power_armor_module/stimpack/process()
@@ -139,7 +135,7 @@ Makes the module inject the first syringe it holds (syringes are FIFO queued).
 /* State
 Helper proc, makes the module state stuff in the chat.
 Accepts:
-	target, the mob receiving the mssage
+	target, the mob receiving the message
 	text, the text to print in the chat
 */
 /obj/item/power_armor_module/stimpack/proc/state(mob/target, text="")

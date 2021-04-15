@@ -105,10 +105,10 @@ Couldn't be implemented with for loop because of different render layers.
 	. += "<span class='notice'>Its maintenance panel is [panel_opened ? "opened" : "closed"]</span>"
 
 	for(var/P in parts)
-		if(parts[P]?.broken)
-			. += "<span class='warning'>The attached [parts[P]] is broken!</span>"
-		else
-			. += "<span class='notice'>It has \the [parts[P]] attached.</span>"
+		if(!parts[P])
+			continue
+		. += "<span class='notice'>It has \the [parts[P]] attached.</span>"
+		. += parts[P].get_examination_line()
 
 /obj/item/clothing/suit/armor/exoskeleton/Destroy()
 	if(!QDELETED(cell))

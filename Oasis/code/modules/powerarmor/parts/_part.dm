@@ -251,6 +251,48 @@ Returns:
 			return TRUE
 	return FALSE
 
+/* Get armor points percent
+Calculates the intergity percent of the part. Only armor points are regarded.
+Returns:
+	the armor points percent of the part
+*/
+/obj/item/power_armor_part/proc/get_armor_points_percent()
+	return max(0, (obj_integrity - max_integrity + armor_points)/armor_points)
+
+/* Get examination line
+Builds a line that is shown both on exoskeleton and part examination.
+Returns:
+	the string that should be printed with examination
+*/
+/obj/item/power_armor_part/proc/get_examination_line()
+	. = ""
+	if(broken)
+		. += "<span class='boldwarning'>\The [src] is broken!</span>"
+	else
+		var/integrity = get_armor_points_percent()
+		switch(integrity)
+			if(0.5 to 0.99)
+				. += "<span class='warning'>\The [src] is slightly damaged.</span>"
+			if(0.25 to 0.49)
+				. += "<span class='warning'>\The [src] is heavily damaged.</span>"
+			if(0 to 0.24)
+				. += "<span class='warning'>\The [src] is falling apart!</span>"
+	return .
+
+/* Repair
+Repairs some amount of HPs of the part.
+Returns:
+	the amount of HPs restored
+*/
+/obj/item/power_armor_part/proc/repair(amount)
+	var/previous_integrity = obj_integrity
+	obj_integrity = CLAMP(obj_integrity + amount, 0, max_integrity)
+	if(broken)
+		if(obj_integrity > (max_integrity - armor_points))
+			broken = FALSE
+			set_limb_disabled(FALSE)
+	return obj_integrity - previous_integrity
+
 /obj/item/power_armor_part/torso
 	slot = EXOSKELETON_SLOT_TORSO
 	body_parts_covered = CHEST|GROIN
