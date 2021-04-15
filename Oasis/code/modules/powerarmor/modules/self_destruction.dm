@@ -89,8 +89,9 @@ Makes the module go boom
 			if(SELF_DESTRUCTION_MODE_ON_DEATH)
 				START_PROCESSING(SSobj, src)
 				mode_desc = "when the wearer dies"
-
 		to_chat(user, "<span class='[span_class]'>\The [src] will now be triggered [mode_desc].</span>")
+		return TRUE
+	return ..(W, user, params)
 
 /datum/action/innate/power_armor/module/self_destruction
 	name = "Initiate self-destruction"

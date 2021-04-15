@@ -72,7 +72,7 @@
 				START_PROCESSING(SSobj, src)
 				mode_desc = "when the wearer dies"
 		to_chat(user, "<span class='notice'>\The [src] will now inject syringes [mode_desc].</span>")
-		return
+		return TRUE
 	return ..(W, user, params)
 
 /obj/item/power_armor_module/stimpack/on_wearer_entered()

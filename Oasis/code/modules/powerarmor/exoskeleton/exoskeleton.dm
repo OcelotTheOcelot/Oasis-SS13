@@ -462,7 +462,7 @@ Accepts:
 			to_chat(user, "<span class='warning'>There's already a cell installed in \the [src].</span>")
 		else
 			if(!user.transferItemToLoc(W, src))
-				return
+				return TRUE
 			cell = W
 			to_chat(user, "<span class='notice'>You install \the [W] in \the [src].</span>")
 			playsound(src.loc, 'sound/machines/click.ogg', 10, TRUE)
@@ -479,13 +479,13 @@ Accepts:
 				playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 			else
 				to_chat(user, "<span class='notice'>There's no part to take modules from!</span>")
-			return
+			return TRUE
 		if(equipped)
 			to_chat(user, "<span class='warning'>You can not uninstall modules to \the [src] while you are wearing it!</span>")
-			return
+			return TRUE
 		if (selected_part.modules.len <= 0)
 			to_chat(user, "<span class='notice'>\The [selected_part] has no modules installed!</span>")
-			return
+			return TRUE
 		playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 		selected_part.detach_all_modules()
 		to_chat(user, "<span class='notice'>You uninstall all modules from \the [selected_part].</span>")
@@ -493,37 +493,37 @@ Accepts:
 	else if(istype(W, /obj/item/power_armor_part))
 		if(equipped)
 			to_chat(user, "<span class='warning'>You can not add parts to \the [src] while you are wearing it!</span>")
-			return
+			return TRUE
 		var/obj/item/power_armor_part/part = W
 		var/obj/item/other_item = user.get_inactive_held_item()
 		if(!other_item || other_item.tool_behaviour != TOOL_WRENCH)
 			to_chat(user, "<span class='warning'>You need a wrench to attach parts to \the [src].</span>")
-			return
+			return TRUE
 		if(part.tier > tier)
 			to_chat(user, "<span class='warning'>\The [part] is too advanced for \the [src] to support!</span>")
-			return
+			return TRUE
 		if(part.slot == EXOSKELETON_SLOT_LINING && !bare)
 			to_chat(user, "<span class='warning'>A lining layer can be added only onto a bare exoskeleton!</span>")
-			return
+			return TRUE
 		if(!part.pauldron_compatible)
 			var/obj/item/power_armor_part/torso/T = parts[EXOSKELETON_SLOT_TORSO]
 			if(istype(T) && T.pauldrons)
 				to_chat(user, "<span class='warning'>\The [part] is incompatible with \the [T]'s pauldrons!</span>")
-				return
+				return TRUE
 		if(part.slot == EXOSKELETON_SLOT_TORSO)
 			if(panel_opened)
 				to_chat(user, "<span class='warning'>You have to close the maintenance panel before adding [part]!</span>")
-				return
+				return TRUE
 			var/obj/item/power_armor_part/torso/T = part
 			if(istype(T) && T.pauldrons)
 				for(var/P in parts)
 					if(parts[P] && !parts[P].pauldron_compatible)
 						to_chat(user, "<span class='warning'>\The [part]'s pauldrons are incompatible with \the [P]!</span>")
-						return
+						return TRUE
 		var/obj/item/power_armor_part/previous_part = parts[part.slot]  // Should be safer than using selected_part y'know
 		if(previous_part)
 			to_chat(user, "<span class='warning'>This junction is already occupied by \the [previous_part]!</span>")
-			return
+			return TRUE
 		to_chat(user, "<span class='notice'>You begin to attach \the [W] to \the [src]...</span>")
 		other_item.play_tool_sound(src)
 		if(do_after(user, part.attachment_speed, target = src) && user.transferItemToLoc(W, src))
@@ -534,7 +534,7 @@ Accepts:
 	else if(W.tool_behaviour == TOOL_WRENCH)
 		if(equipped)
 			to_chat(user, "<span class='warning'>You can not detach parts from \the [src] while you are wearing it!</span>")
-			return
+			return TRUE
 		if(panel_opened && bare)
 			to_chat(user, "<span class='notice'>You begin disassembling \the [src]...</span>")
 			W.play_tool_sound(src)
@@ -556,7 +556,7 @@ Accepts:
 	else if(istype(W, /obj/item/power_armor_module))
 		if(equipped)
 			to_chat(user, "<span class='warning'>You can not attach modules to \the [src] while you are wearing it!</span>")
-			return
+			return TRUE
 		if(selected_part)
 			if(selected_part.can_accept_module(W) && user.transferItemToLoc(W, selected_part))
 				playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
@@ -568,7 +568,7 @@ Accepts:
 			to_chat(user, "<span class='notice'>There's no part to hold this module!</span>")
 
 	else if(selected_part?.try_apply_item(W, user))
-		return
+		return TRUE
 
 	return ..(W, user, params)
  

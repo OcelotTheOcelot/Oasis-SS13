@@ -153,11 +153,11 @@ Accepts:
 		detach_all_modules()
 		to_chat(user, "<span class='notice'>You uninstall all modules from \the [src].</span>")
 	else if(try_apply_item(W, user))
-		return
+		return TRUE
 	else
 		for(var/M in modules)
 			if(modules[M]?.try_apply_item(W, user))
-				return
+				return TRUE
 	return ..(W, user, params)
 
 /* On wearer entered

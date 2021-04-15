@@ -224,7 +224,7 @@ Returns:
 
 /obj/item/power_armor_module/attackby(obj/item/W, mob/user, params)
 	if(try_apply_item(W, user))
-		return
+		return TRUE
 	return ..(W, user, params)
 
 /* On detached
