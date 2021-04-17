@@ -22,6 +22,7 @@
 	var/injection_mode = INJECTION_MODE_ON_CRIT  // What condition should be met to make the module inject a syringe
 	var/auto_inject_delay = 150  // How much time should pass between automatic injections so the backpack won't OD the wearer
 	var/last_injection_time = -150  // world.time at the moment of the last injection
+	var/datum/power_armor_overlay/indicator  // Overlay used to render the indicators
 
 /obj/item/power_armor_module/stimpack/create_module_actions()
 	. = ..()
@@ -37,6 +38,10 @@
 	PAO.priority = POWER_ARMOR_LAYER_CHEST_MODULE_BACK
 	PAO.appearance = mutable_appearance(icon, "torso_back")
 	. += PAO
+	indicator = new
+	indicator.priority = POWER_ARMOR_LAYER_INDICATORS
+	indicator.appearance = mutable_appearance(icon, "torso_ammo_counter")
+	. += indicator
 	return .
 
 /obj/item/gun/syringe/handle_atom_del(atom/A)

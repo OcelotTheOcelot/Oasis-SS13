@@ -96,6 +96,7 @@
 #include "Oasis\code\modules\powerarmor\modules\stimpack.dm"
 #include "Oasis\code\modules\powerarmor\parts\_part.dm"
 #include "Oasis\code\modules\powerarmor\parts\basic\p5000pwl.dm"
+#include "Oasis\code\modules\powerarmor\parts\basic\praetor.dm"
 #include "Oasis\code\modules\powerarmor\parts\military\cherub.dm"
 #include "Oasis\code\modules\powerarmor\parts\military\mk2apa.dm"
 #include "Oasis\code\modules\powerarmor\parts\military\samovar.dm"

@@ -5,7 +5,6 @@
 	desc = "A device that delivers a dose of electric current to the wearer's heart. Activates automatically when the wearer's heart stops beating."
 	icon = 'Oasis/icons/powerarmor/modules/defibrillator.dmi'
 	slot = MODULE_SLOT_CHESTPLATE
-	locks_hand = FALSE
 	render_priority = POWER_ARMOR_LAYER_CHEST_MODULE_FRONT
 
 	var/defibrillation_cost = 1000  // How much does a charge cost

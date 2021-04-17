@@ -302,6 +302,7 @@ Returns:
 	part_icon_state = "torso"
 	render_priority = POWER_ARMOR_LAYER_TORSO
 	var/pauldrons = FALSE  // If the torso has pauldrons to be rendered 
+	var/collar = FALSE  // If the torso has additional layer for rendering collar over helmet
 	var/uses_empty_state = FALSE  // If the torso has additional layer for rendering when not occupied
 
 /obj/item/power_armor_part/torso/on_detached()
@@ -312,6 +313,11 @@ Returns:
 
 /obj/item/power_armor_part/torso/Initialize()
 	..()
+	if(collar)
+		var/datum/power_armor_overlay/PAO = new
+		PAO.priority = POWER_ARMOR_LAYER_COLLAR
+		PAO.appearance = mutable_appearance(icon, "collar")
+		power_armor_overlays += PAO
 	if(pauldrons)
 		var/datum/power_armor_overlay/PAO = new
 		PAO.priority = POWER_ARMOR_LAYER_PAULDRONS
