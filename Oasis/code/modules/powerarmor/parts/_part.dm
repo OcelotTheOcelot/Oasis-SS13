@@ -34,8 +34,6 @@
 	var/module_slots = MODULE_SLOT_TORSIAL  // Flag specifiying what module slots does this part have 
 	var/list/modules = new  // This list contains the modules installed in the part
 
-	var/passive_power_consumption = 0  // Amount of power drawn every tick when the exoskeleton is enabled
-	var/active_power_consumption = 0  // Amount of power drawn when a specific action is performed
 	slowdown = 0.2  // How much does this part add to the exosuit slowdown; this variable is already defined in the item.dm but used only for equipment
 	var/eqipment_delay = 5  // How much does this part add to the exosuit eqipment_delay
 
@@ -60,9 +58,8 @@
 	return ..()
 
 /obj/item/power_armor_part/examine(mob/user)
-	. = ..()
-	var/M
-	for(M in modules)
+	. = ..(user)
+	for(var/M in modules)
 		. += "<span class='notice'>It has [modules[M]] installed.</span>"
 	switch(tier)
 		if(POWER_ARMOR_GRADE_BASIC)
@@ -174,14 +171,13 @@ Accepts:
 		user.get_bodypart(protected_bodyzone)?.AddComponent(/datum/component/power_armor_damage_interceptor, src)
 	else
 		set_limb_disabled(TRUE)
-	var/M
-	for(M in modules)
+	for(var/M in modules)
 		modules[M].on_wearer_entered(user)
 
 /* On wearer left
 Called when the wearer leaves the exoskeleton.
 Removes related actions and items.
-Adds the damage interception component, crucial for proper power armor working.
+Removes the damage interception component.
 Accepts:
 	user, the wearer
 */

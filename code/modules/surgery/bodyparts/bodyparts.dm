@@ -241,7 +241,7 @@
 	if(HAS_TRAIT(src, TRAIT_PARALYSIS))
 		return BODYPART_DISABLED_PARALYSIS
 
-	if(get_power_armor_part()?.broken)
+	if(get_interceptor()?.is_broken())
 		return BODYPART_DISABLED_OBSTRUCTED
 
 	if(can_dismember() && !HAS_TRAIT(owner, TRAIT_NOLIMBDISABLE))
@@ -449,16 +449,24 @@
 			if(aux_zone)
 				aux.color = "#[draw_color]"
 
-
-/* Get power armor
-Checks if the bodypart is covered by a piece of power armor and if it is, returns the part.
-Returs:
-	The power armor part or null
+/* Is protected by power armor
+Checks if the bodypart is protected by a piece of power armor (including helmet) and this piece is not broken.
+Returns:
+	TRUE if the bodypart is protected by a not broken piece of power armor, FALSE otherwise.
 */
-/obj/item/bodypart/proc/get_power_armor_part()
+/obj/item/bodypart/proc/is_protected_by_power_armor()
+	to_chat(owner, "[src]'s interceptor: [get_interceptor()], protecting: [get_interceptor()?.is_protecting()]")
+	return get_interceptor()?.is_protecting() || FALSE
+
+/* Get interceptor
+Checks if the bodypart is protected by some interceptor.
+Returns:
+	the power_armor_damage_interceptor protecting this bodypart or null
+*/
+/obj/item/bodypart/proc/get_interceptor()
 	var/datum/component/power_armor_damage_interceptor/PADI = GetComponent(/datum/component/power_armor_damage_interceptor)
 	if(istype(PADI))
-		return PADI.part
+		return PADI
 	return null
 
 /obj/item/bodypart/deconstruct(disassembled = TRUE)

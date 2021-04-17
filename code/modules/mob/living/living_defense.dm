@@ -70,9 +70,10 @@
 		dtype = I.damtype
 
 		if (I.throwforce > 0) //If the weapon's throwforce is greater than zero...
-			var/obj/item/power_armor_part/P = get_bodypart(check_zone(zone))?.get_power_armor_part()
-			if(P && !P.broken)
-				P.play_attack_sound(I.throwforce, dtype)
+			var/obj/item/bodypart/BP = get_bodypart(check_zone(zone))
+			if(BP?.is_protected_by_power_armor())
+				// Make the power armor part emit that BANG sound
+				BP.get_interceptor().play_attack_sound(I.throwforce, dtype)
 			else
 				if (I.throwhitsound) //...and throwhitsound is defined...
 					playsound(loc, I.throwhitsound, volume, 1, -1) //...play the weapon's throwhitsound.

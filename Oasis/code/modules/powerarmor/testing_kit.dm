@@ -20,11 +20,20 @@
 
 	new /obj/item/clothing/suit/armor/exoskeleton/military(loc)
 
+	/*
 	new /obj/item/power_armor_part/l_arm/cherub(loc)
 	new /obj/item/power_armor_part/r_arm/cherub(loc)
 	new /obj/item/power_armor_part/torso/cherub(loc)
 	new /obj/item/power_armor_part/l_leg/cherub(loc)
 	new /obj/item/power_armor_part/r_leg/cherub(loc)
+	*/
+
+	new /obj/item/power_armor_part/l_arm/praetor(loc)
+	new /obj/item/power_armor_part/r_arm/praetor(loc)
+	new /obj/item/power_armor_part/torso/praetor(loc)
+	new /obj/item/power_armor_part/l_leg/praetor(loc)
+	new /obj/item/power_armor_part/r_leg/praetor(loc)
+	new /obj/item/clothing/head/helmet/power_armor/praetor(loc)
 
 	new /obj/item/power_armor_module/hydraulic_clamp(loc)
 	// new /obj/item/power_armor_module/magnetic_clamp(loc)
@@ -37,6 +46,7 @@
 	// new /obj/item/power_armor_module/mandible(loc)  // <DONE>
 	// new /obj/item/power_armor_module/auto_repair_kit(loc)  // <DONE>
 	new /obj/item/power_armor_module/mega_blaster(loc)  // <TODO> We should implement beamrifles' charging
-	// new /obj/item/power_armor_module/defibrillator(loc)  // <DONE>
+	new /obj/item/power_armor_module/defibrillator(loc)  // <DONE>
+	// new /obj/item/power_armor_module/forcefield(loc)
 
 	QDEL_NULL(src)

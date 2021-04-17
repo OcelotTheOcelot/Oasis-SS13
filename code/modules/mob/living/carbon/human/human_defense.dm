@@ -153,8 +153,8 @@
 			if(can_embed(I))
 				if(prob(I.embedding.embed_chance) && !HAS_TRAIT(src, TRAIT_PIERCEIMMUNE))
 					var/obj/item/bodypart/L = pick(bodyparts)
-					var/obj/item/power_armor_part/P = L.get_power_armor_part()
-					if(!istype(P) || P.broken)
+					// Power armor parts should prevent embedding
+					if(!L.is_protected_by_power_armor())
 						throw_alert("embeddedobject", /atom/movable/screen/alert/embeddedobject)
 						L.embedded_objects |= I
 						I.add_mob_blood(src)//it embedded itself in you, of course it's bloody!

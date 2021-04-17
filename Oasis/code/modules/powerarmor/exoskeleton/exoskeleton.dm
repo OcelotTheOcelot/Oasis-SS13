@@ -55,7 +55,7 @@ Credits:
 
 	var/mob/living/wearer  // Current wearer of the suit; use this instead of loc check, but prefer using 'user' proc parameter if present 
 	var/datum/action/innate/power_armor/exoskeleton_eject/eject_action  // A datum responsible for ejection from exosuit
-	var/list/exoskeleton_overlays = new  // An associative list containing appearances of the parts to be rendered when there's no part attached.
+	var/list/exoskeleton_overlays = new  // An associative list containing appearances of bare parts to be rendered when there's no part attached.
 
 /obj/item/clothing/suit/armor/exoskeleton/Initialize()
 	. = ..()

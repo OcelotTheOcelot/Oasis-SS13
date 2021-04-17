@@ -1353,9 +1353,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		user.dna.species.spec_unarmedattacked(user, target)
 
 		// Power armor damage interception prevents dismembering and fleshy hit sound
-		var/obj/item/power_armor_part/P = affecting.get_power_armor_part()
-		if(P && !P.broken)
-			P.play_attack_sound(damage, attack_type)
+		if(affecting.is_protected_by_power_armor())
+			affecting.get_interceptor().interceptor?.play_attack_sound(damage, attack_type)
 		else
 			playsound(target.loc, user.dna.species.attack_sound, 25, 1, -1)
 			if(user.limb_destroyer)
@@ -1560,8 +1559,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		return 0 //item force is zero
 
 	// Power armor damage interception; an armored bodypart shouldn't get dismembered or leave blood when hit;
-	var/obj/item/power_armor_part/P = affecting.get_power_armor_part()
-	if(P && !P.broken)
+	if(affecting.is_protected_by_power_armor())
 		return FALSE
 
 	//dismemberment

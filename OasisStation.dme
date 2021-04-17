@@ -81,6 +81,7 @@
 #include "Oasis\code\modules\powerarmor\exoskeleton\exoskeleton_assembly.dm"
 #include "Oasis\code\modules\powerarmor\exoskeleton\exoskeleton_tiers.dm"
 #include "Oasis\code\modules\powerarmor\helmets\_helmet.dm"
+#include "Oasis\code\modules\powerarmor\helmets\praetor.dm"
 #include "Oasis\code\modules\powerarmor\modules\_module.dm"
 #include "Oasis\code\modules\powerarmor\modules\auto_repair_kit.dm"
 #include "Oasis\code\modules\powerarmor\modules\defibrillator.dm"
