@@ -3,9 +3,9 @@ Credits:
 	NDOcelot
 		for all the monkey code and most of the sprites;
 	TottalyNotC
-		for his balance recommendations, concepts and sprites of "Pangolin", "Mk.II APA" "Juggernaut" armor sets and stimpack module;
+		for his balance recommendations, concepts and sprites of "Pangolin", "Mk.II APA" and "Praetor" armor sets and stimpack module;
 	NDHavch1k
-		for his balance recommendations, "Mk.II APA" helmet and "Juggernaut" armor set sprites and willing to be helpful.
+		for his balance recommendations, "Mk.II APA" helmet and "Praetor" armor set sprites and willing to be helpful.
 */
 
 /obj/item/clothing/suit/armor/exoskeleton
@@ -117,7 +117,8 @@ Couldn't be implemented with for loop because of different render layers.
 		QDEL_NULL(parts[P])
 	if(eject_action)
 		QDEL_NULL(eject_action)
-	toggle_offset(FALSE)
+	if(wearer)
+		toggle_offsets(wearer, FALSE)
 	return ..()
 
 /obj/item/clothing/suit/armor/exoskeleton/handle_atom_del(atom/A)
@@ -131,7 +132,8 @@ Couldn't be implemented with for loop because of different render layers.
 	..()
 	if(slot == ITEM_SLOT_OCLOTHING)
 		wearer = user
-		toggle_offset(user, TRUE)
+		toggle_offsets(user, TRUE)
+		
 		dir = SOUTH
 
 		if(eject_action)
@@ -159,9 +161,9 @@ Couldn't be implemented with for loop because of different render layers.
 		if(eject_action)
 			eject_action.Remove(user)
 
-		toggle_offset(user, FALSE)
+		toggle_offsets(user, FALSE)
 		var/obj/item/clothing/head/helmet/power_armor/helmet = user.get_item_by_slot(ITEM_SLOT_HEAD)
-		if(istype(helmet))
+		if(istype(helmet) && !helmet.mob_can_equip(user, user, ITEM_SLOT_HEAD, disable_warning = TRUE))
 			user.dropItemToGround(helmet)
 
 		REMOVE_TRAIT(user, TRAIT_EXOSKELETON, CLOTHING_TRAIT)
@@ -178,18 +180,48 @@ Couldn't be implemented with for loop because of different render layers.
 /* Toggle offset
 Tweaks the wearer's y icon offset so they look taller in the exoskeleton and vice versa.
 Accepts:
-	user, the wearer of the exoskeleton whose offsets are being tweaked.
+	user, the wearer of the exoskeleton whose offsets are being tweaked
+	equipped, if the offsets should be added or restored
 */
-/obj/item/clothing/suit/armor/exoskeleton/proc/toggle_offset(mob/living/carbon/user, equipped=FALSE)
+/obj/item/clothing/suit/armor/exoskeleton/proc/toggle_offsets(mob/living/carbon/user, equipped = FALSE)
 	if(!istype(user))
 		return
+
 	if(equipped)
 		user.pixel_y += EXOSKELETON_ADDITIONAL_HEIGHT
 		worn_y_dimension -= 2 * EXOSKELETON_ADDITIONAL_HEIGHT
 	else
 		user.pixel_y -= EXOSKELETON_ADDITIONAL_HEIGHT
 		worn_y_dimension = world.icon_size
+	toggle_hand_offsets(user, equipped)
 	user.update_inv_wear_suit()
+
+/* Toggle hand offsets
+Updates the offsets for the icons of the held items to corresponds the offsets of the arms attached.
+Accepts:
+	user, the wearer of the exoskeleton whose offsets are being tweaked
+	equipped, if the offsets should be added or restored
+*/
+/obj/item/clothing/suit/armor/exoskeleton/proc/toggle_hand_offsets(mob/living/carbon/user, equipped = FALSE)
+	if(!iscarbon(user))
+		return
+
+	if(equipped)
+		// Note: x-offset is not implemented and I doubt it is possible to be.
+		var/obj/item/power_armor_part/l_arm/l_arm = parts[EXOSKELETON_SLOT_L_ARM]
+		if(istype(l_arm))
+			user.item_inhand_offsets[1]["y"] += l_arm.item_inhand_offsets["y"]
+		var/obj/item/power_armor_part/r_arm/r_arm = parts[EXOSKELETON_SLOT_R_ARM]
+		if(istype(r_arm))
+			user.item_inhand_offsets[2]["y"] += r_arm.item_inhand_offsets["y"]
+	else
+		// Believe me I intented to make it initial(C.item_inhand_offsets), but it returns null smh...
+		user.item_inhand_offsets = list(
+			list("x" = 0, "y" = 0),
+			list("x" = 0, "y" = 0)
+		)
+
+	user.update_inv_hands()
 
 /* Update slowdown
 Helper proc used to recalculate and update current slowdown.
@@ -282,10 +314,13 @@ May be used for manual (de)activation later.
 Takes a power_armor part and attaches it to the exoskeleton
 Accepts:
 	P, the part to attach
+	transfer, if the part shoud be moved to the exoskeleton; pass FALSE only when it's handled separately
 */
-/obj/item/clothing/suit/armor/exoskeleton/proc/attach_part(obj/item/power_armor_part/P)
+/obj/item/clothing/suit/armor/exoskeleton/proc/attach_part(obj/item/power_armor_part/P, transfer = TRUE)
 	if(!istype(P))
 		return
+	if(transfer)
+		P.forceMove(src)
 	parts[P.slot] = P
 	P.exoskeleton = src
 	P.on_attached(src)
@@ -300,7 +335,7 @@ Accepts:
 
 	update_slowdown()
 	update_appearances()
-	update_hand_offsets()
+	toggle_hand_offsets(wearer, TRUE)
 	update_icon()
 
 /* Detach part
@@ -327,15 +362,8 @@ Accepts:
 
 	update_slowdown()
 	update_appearances()
-	update_hand_offsets()
+	toggle_hand_offsets(wearer, TRUE)
 	update_icon()
-
-/* Update hand offsets
-Updates the offsets for the icons of the held items to corresponds the offsets of the arms attached.
-*/
-/obj/item/clothing/suit/armor/exoskeleton/proc/update_hand_offsets()
-	// <TODO> Not implemented yet!!
-	return
 
 /obj/item/clothing/suit/armor/exoskeleton/update_icon()
 	..()
@@ -450,6 +478,16 @@ Accepts:
 		sleep(1)  // This simply prevents the suit transfering animation from being noticeable
 		M.equip_to_slot_if_possible(src, ITEM_SLOT_OCLOTHING)
 
+/obj/item/clothing/suit/armor/exoskeleton/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1)
+	// Note: this system is imperfect since the intercepting part selection is unrandomized.
+	for(var/P in parts)
+		var/obj/item/power_armor_part/part = parts[P]
+		if(!istype(part) || part.broken)
+			continue
+		part.take_damage(damage_amount, damage_type, damage_flag, sound_effect)
+		return
+	return ..()
+
 /obj/item/clothing/suit/armor/exoskeleton/attackby(obj/item/W, mob/user, params)
 	var/equipped = is_equipped(user)
 	var/bare = parts.len <= 0
@@ -527,7 +565,7 @@ Accepts:
 		to_chat(user, "<span class='notice'>You begin to attach \the [W] to \the [src]...</span>")
 		other_item.play_tool_sound(src)
 		if(do_after(user, part.attachment_speed, target = src) && user.transferItemToLoc(W, src))
-			attach_part(part)
+			attach_part(part, transfer = FALSE)
 			playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
 			to_chat(user, "<span class='notice'>You attach \the [W] to \the [src].</span>")
 

@@ -242,6 +242,7 @@ Returns:
 	TRUE if the item was applied successfully, FALSE otherwise; returning TRUE is supposed to prevent other try_apply_item and attackby interactions 
 */
 /obj/item/power_armor_part/proc/try_apply_item(obj/item/I, mob/user)
+	SEND_SIGNAL(src, COMSIG_POWER_ARMOR_PART_APPLY_ITEM, I, user)
 	for(var/M in modules)
 		if(modules[M]?.try_apply_item(I, user))
 			return TRUE
@@ -328,8 +329,7 @@ Returns:
 	icon_state = "l_arm_item"
 	part_icon_state = "l_arm"
 	render_priority = POWER_ARMOR_LAYER_ARMS
-	var/held_item_offset_x = 1  // How many pixels the icon of the item held in the according hand is shifted on x-axis
-	var/held_item_offset_y = 4  // How many pixels the icon of the item held in the according hand is shifted on y-axis
+	var/item_inhand_offsets = list("x" = 1, "y" = 4)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
 
 /obj/item/power_armor_part/r_arm
 	slot = EXOSKELETON_SLOT_R_ARM
@@ -339,8 +339,7 @@ Returns:
 	icon_state = "r_arm_item"
 	part_icon_state = "r_arm"
 	render_priority = POWER_ARMOR_LAYER_ARMS
-	var/held_item_offset_x = 1  // See held_item_offset_x of /obj/item/power_armor_part/l_arm
-	var/held_item_offset_y = 4  // See held_item_offset_y of /obj/item/power_armor_part/l_arm
+	var/item_inhand_offsets = list("x" = 1, "y" = 4)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
 
 /obj/item/power_armor_part/l_leg
 	slot = EXOSKELETON_SLOT_L_LEG

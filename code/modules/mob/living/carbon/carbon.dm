@@ -1,6 +1,12 @@
 /mob/living/carbon
 	blood_volume = BLOOD_VOLUME_NORMAL
 
+	// Added and currently used only for power armor offsets
+	var/item_inhand_offsets = list(
+		list("x" = 0, "y" = 0),
+		list("x" = 0, "y" = 0)
+	)
+
 /mob/living/carbon/Initialize()
 	. = ..()
 	create_reagents(1000)

@@ -1,0 +1,1 @@
+#define COMSIG_POWER_ARMOR_PART_APPLY_ITEM "pa_part_applyitem"

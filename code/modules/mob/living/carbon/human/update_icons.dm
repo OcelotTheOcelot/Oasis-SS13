@@ -609,6 +609,19 @@ generate/load female uniform sprites matching all previously decided variables
 		else //No offsets or Unwritten number of hands
 			return list("x" = 0, "y" = 0)//Handle held offsets
 
+/* Idk for what reason get_item_offsets_for_index was placed in THIS FILE and why does it use 3 and 4 as indexes, but...
+When in Rome, do as the Romans do.
+This proc override exists only for power armor inhand offsets implementation and can be deleted safely.
+Consider removing var/item_inhand_offsets from carbon.dm along with it.
+	- Ocelot
+*/
+/mob/living/carbon/get_item_offsets_for_index(i)
+	switch(i)
+		if(1 to 2)
+			return item_inhand_offsets[i]
+		else
+			return ..(i)
+
 //produces a key based on the human's limbs
 /mob/living/carbon/human/generate_icon_render_key()
 	. = "[dna.species.limbs_id]"

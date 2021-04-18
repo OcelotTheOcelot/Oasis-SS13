@@ -3,8 +3,8 @@
 	name = "power armor helmet"
 	desc = "A helmet that can be worn only with exoskeleton."
 	max_integrity = 80
-	icon_state = "helmet_item"
-	item_state = "helmet"
+	icon = 'Oasis/icons/powerarmor/helmets/helmet_items.dmi'
+	alternate_worn_icon = 'Oasis/icons/powerarmor/helmets/helmets.dmi'
 
 	var/tier = POWER_ARMOR_GRADE_BASIC  // The tier of the helmet, needed for balance
 	var/armor_points = 60  // How much damage points the part absorbs until it's broken
@@ -29,7 +29,7 @@
 
 /obj/item/clothing/head/helmet/power_armor/Initialize()
 	..()
-	worn_y_dimension -= EXOSKELETON_ADDITIONAL_HEIGHT
+	worn_y_dimension += EXOSKELETON_ADDITIONAL_HEIGHT * 2
 
 /obj/item/clothing/head/helmet/power_armor/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	if(!..() || !ishuman(M))
@@ -37,7 +37,7 @@
 	var/mob/living/carbon/human/H = M
 
 	// Yes, hulks can equip basic helmets, viva le powergaming
-	if(tier == POWER_ARMOR_GRADE_BASIC && H.dna && H.dna.check_mutation(HULK))
+	if(tier == POWER_ARMOR_GRADE_BASIC && H.dna?.check_mutation(HULK))
 		return TRUE
 
 	var/obj/item/clothing/suit/armor/exoskeleton/E = H.wear_suit
@@ -59,14 +59,33 @@
 		for(var/M in modules)
 			modules[M].on_wearer_entered(user)
 
+	synchronize_with_exoskeleton(user.get_item_by_slot(ITEM_SLOT_OCLOTHING))
+
 /obj/item/clothing/head/helmet/power_armor/dropped(mob/living/user)
 	if(is_equipped(user))
 		wearer = null
 		on_wearer_left(user)
 		for(var/M in modules)
 			modules[M].on_wearer_left(user)
+		desynchronize_with_exoskeleton()
 	..(user)
-	
+
+/* Synchronize with exosketon
+Synchronize HUD and trackers with the exoskeleton worn by the helmet's wearer.
+Accepts:
+	exoskeleton, the exoskeleton
+*/
+/obj/item/clothing/head/helmet/power_armor/proc/synchronize_with_exoskeleton(var/obj/item/clothing/suit/armor/exoskeleton/exoskeleton)
+	if(!istype(exoskeleton))
+		return
+	src.exoskeleton = exoskeleton
+
+/* Desynchronize with exosketon
+Cancels changes made by synchronize_with_exoskeleton
+*/
+/obj/item/clothing/head/helmet/power_armor/proc/desynchronize_with_exoskeleton()
+	exoskeleton = null
+
 /* Is equipped
 Helper proc used to determine if the helmet is equipped by the wearer.
 Accepts:
