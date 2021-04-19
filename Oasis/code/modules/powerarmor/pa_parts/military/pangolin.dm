@@ -1,7 +1,7 @@
 /obj/item/power_armor_part/torso/pangolin
 	name = "\"Pangolin\" power armor chestplate"
 	desc = "<TODO>"
-	icon = 'Oasis/icons/powerarmor/parts/pangolin.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/pangolin.dmi'
 	set_bonus = /datum/component/power_armor_set_bonus/pangolin
 	slowdown = 1
 	render_priority = 5
@@ -15,7 +15,7 @@
 /obj/item/power_armor_part/l_arm/pangolin
 	name = "\"Pangolin\" power armor left arm"
 	desc = "<TODO>"
-	icon = 'Oasis/icons/powerarmor/parts/pangolin.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/pangolin.dmi'
 	set_bonus = /datum/component/power_armor_set_bonus/pangolin
 	slowdown = 0.8
 	tier = POWER_ARMOR_GRADE_MILITARY
@@ -25,7 +25,7 @@
 /obj/item/power_armor_part/r_arm/pangolin
 	name = "\"Pangolin\" power armor right arm"
 	desc = "<TODO>"
-	icon = 'Oasis/icons/powerarmor/parts/pangolin.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/pangolin.dmi'
 	set_bonus = /datum/component/power_armor_set_bonus/pangolin
 	slowdown = 0.8
 	tier = POWER_ARMOR_GRADE_MILITARY
@@ -35,7 +35,7 @@
 /obj/item/power_armor_part/l_leg/pangolin
 	name = "\"Pangolin\" power armor left leg"
 	desc = "<TODO>"
-	icon = 'Oasis/icons/powerarmor/parts/pangolin.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/pangolin.dmi'
 	set_bonus = /datum/component/power_armor_set_bonus/pangolin
 	slowdown = 0.8
 	render_priority = 0
@@ -46,7 +46,7 @@
 /obj/item/power_armor_part/r_leg/pangolin
 	name = "\"Pangolin\" power armor right leg"
 	desc = "<TODO>"
-	icon = 'Oasis/icons/powerarmor/parts/pangolin.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/pangolin.dmi'
 	set_bonus = /datum/component/power_armor_set_bonus/pangolin
 	slowdown = 0.8
 	render_priority = 0

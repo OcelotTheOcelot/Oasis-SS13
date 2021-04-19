@@ -3,7 +3,7 @@
 	desc = "\"Praetor\" power armor chestplate. \
 Unlike other kinds of armor, this one was designed specifically not to hinder the wearer's movement. \
 Furthermore, when fully equipped, the armor set gives the wearer additional protection from dangerous fauna dwelling the Lavaland."
-	icon = 'Oasis/icons/powerarmor/parts/praetor.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/praetor.dmi'
 	slowdown = 0.1
 	render_priority = POWER_ARMOR_LAYER_TORSO
 	uses_empty_state = TRUE
@@ -21,7 +21,7 @@ Furthermore, when fully equipped, the armor set gives the wearer additional prot
 	desc = "\"Praetor\" left arm power armor piece. \
 Unlike other kinds of armor, this one was designed specifically not to hinder the wearer's movement. \
 Furthermore, when fully equipped, the armor set gives the wearer additional protection from dangerous fauna dwelling the Lavaland."
-	icon = 'Oasis/icons/powerarmor/parts/praetor.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/praetor.dmi'
 	slowdown = 0.05
 	pauldron_compatible = FALSE
 	module_slots = MODULE_SLOT_ARM
@@ -38,7 +38,7 @@ Furthermore, when fully equipped, the armor set gives the wearer additional prot
 	desc = "\"Praetor\" right arm power armor piece. \
 Unlike other kinds of armor, this one was designed specifically not to hinder the wearer's movement. \
 Furthermore, when fully equipped, the armor set gives the wearer additional protection from dangerous fauna dwelling the Lavaland."
-	icon = 'Oasis/icons/powerarmor/parts/praetor.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/praetor.dmi'
 	slowdown = 0.05
 	pauldron_compatible = FALSE
 	module_slots = MODULE_SLOT_ARM
@@ -55,7 +55,7 @@ Furthermore, when fully equipped, the armor set gives the wearer additional prot
 	desc = "\"Praetor\" left leg power armor piece. \
 Unlike other kinds of armor, this one was designed specifically not to hinder the wearer's movement. \
 Furthermore, when fully equipped, the armor set gives the wearer additional protection from dangerous fauna dwelling the Lavaland."
-	icon = 'Oasis/icons/powerarmor/parts/praetor.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/praetor.dmi'
 	slowdown = 0.05
 	set_bonus = /datum/component/power_armor_set_bonus/praetor
 	max_integrity = 80
@@ -70,7 +70,7 @@ Furthermore, when fully equipped, the armor set gives the wearer additional prot
 	desc = "\"Praetor\" right leg power armor piece. \
 Unlike other kinds of armor, this one was designed specifically not to hinder the wearer's movement. \
 Furthermore, when fully equipped, the armor set gives the wearer additional protection from dangerous fauna dwelling the Lavaland."
-	icon = 'Oasis/icons/powerarmor/parts/praetor.dmi'
+	icon = 'Oasis/icons/powerarmor/pa_parts/praetor.dmi'
 	slowdown = 0.05
 	set_bonus = /datum/component/power_armor_set_bonus/praetor
 	max_integrity = 80
