@@ -43,7 +43,6 @@ Credits:
 	var/activated = FALSE  // Determines if the suit is active
 	var/powered = FALSE  // Determines if the suit has a power cell with some charge in it
 	var/step_power_consumption = 5  // How much power is drained when the wearer moves
-
 	var/additive_slowdown  // How much the attached parts should slow the user down
 	var/eqipment_delay = 0  // How much time it takes to equip the exoskeleton
 
@@ -52,10 +51,10 @@ Credits:
 	var/list/power_armor_overlays = new  // This list contains list of sortable power_armor_overlay datums that is processed into appearances to be rendered 
 
 	var/disassemble_speed = 100  // How much time does it take to disassemble the exoskeleton
-
 	var/mob/living/wearer  // Current wearer of the suit; use this instead of loc check, but prefer using 'user' proc parameter if present 
 	var/datum/action/innate/power_armor/exoskeleton_eject/eject_action  // A datum responsible for ejection from exosuit
 	var/list/exoskeleton_overlays = new  // An associative list containing appearances of bare parts to be rendered when there's no part attached.
+	var/list/set_bonuses = new  // List of set bonuses as /datum/component/power_armor_set_bonus
 
 /obj/item/clothing/suit/armor/exoskeleton/Initialize()
 	. = ..()
@@ -108,7 +107,12 @@ Couldn't be implemented with for loop because of different render layers.
 		if(!parts[P])
 			continue
 		. += "<span class='notice'>It has \the [parts[P]] attached.</span>"
-		. += parts[P].get_examination_line()
+		var/additional_info = parts[P].get_examination_line()
+		if(additional_info)
+			. += additional_info
+
+	for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
+		. += "<span class='boldnotice'>[set_bonus.desc]</span>"
 
 /obj/item/clothing/suit/armor/exoskeleton/Destroy()
 	if(!QDELETED(cell))
@@ -336,6 +340,7 @@ Accepts:
 	update_slowdown()
 	update_appearances()
 	toggle_hand_offsets(wearer, TRUE)
+	update_set_bonus()
 	update_icon()
 
 /* Detach part
@@ -363,6 +368,7 @@ Accepts:
 	update_slowdown()
 	update_appearances()
 	toggle_hand_offsets(wearer, TRUE)
+	update_set_bonus()
 	update_icon()
 
 /obj/item/clothing/suit/armor/exoskeleton/update_icon()
@@ -479,7 +485,7 @@ Accepts:
 		M.equip_to_slot_if_possible(src, ITEM_SLOT_OCLOTHING)
 
 /obj/item/clothing/suit/armor/exoskeleton/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1)
-	// Note: this system is imperfect since the intercepting part selection is unrandomized.
+	// Note: this system is imperfect since the intercepting part selection is unrandomized. No one is going to notice, I guess. 
 	for(var/P in parts)
 		var/obj/item/power_armor_part/part = parts[P]
 		if(!istype(part) || part.broken)
@@ -487,6 +493,30 @@ Accepts:
 		part.take_damage(damage_amount, damage_type, damage_flag, sound_effect)
 		return
 	return ..()
+
+/* Update set bonus
+Applies and removes armor set bonuses regarding the amount of parts from one set.
+*/
+/obj/item/clothing/suit/armor/exoskeleton/proc/update_set_bonus()
+	var/list/sets = new
+	for(var/P in parts)
+		var/obj/item/power_armor_part/part = parts[P]
+		if(!istype(part) || !part.set_bonus)
+			continue
+		var/datum/component/power_armor_set_bonus/set_type = part.set_bonus.type
+		sets[set_type] = (sets[set_type] || 0) + 1
+
+	// Firstly, we remove existing set bonuses if there's not enough parts for full set...
+	for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
+		if((sets[set_bonus.type] || 0) < set_bonus.amount_for_full_set)
+			set_bonus.deactivate()
+			set_bonuses.Remove(set_bonus)
+
+	// Then, we add non-existing bonuses...
+	for(var/datum/component/power_armor_set_bonus/set_type in sets)
+		if(sets[set_type] >= set_type.amount_for_full_set)
+			var/new_bonus = AddComponent(/datum/component/power_armor_set_bonus)
+			set_bonuses.Add(new_bonus)
 
 /obj/item/clothing/suit/armor/exoskeleton/attackby(obj/item/W, mob/user, params)
 	var/equipped = is_equipped(user)

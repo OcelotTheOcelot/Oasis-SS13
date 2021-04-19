@@ -18,7 +18,7 @@
 	return .
 
 /* Hop
-Makes the wearer leap in their current direction , if they have enough power in their exoskeleton for that.
+Makes the wearer leap in their current direction, if they have enough power in their exoskeleton for that.
 */
 /obj/item/power_armor_module/grasshopper/proc/hop()
 	var/obj/item/clothing/suit/armor/exoskeleton/E = part?.exoskeleton
