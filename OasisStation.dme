@@ -98,6 +98,7 @@
 #include "Oasis\code\modules\powerarmor\modules\mining_drill.dm"
 #include "Oasis\code\modules\powerarmor\modules\plasma_cutter.dm"
 #include "Oasis\code\modules\powerarmor\modules\plasma_generator.dm"
+#include "Oasis\code\modules\powerarmor\modules\rcd.dm"
 #include "Oasis\code\modules\powerarmor\modules\self_destruction.dm"
 #include "Oasis\code\modules\powerarmor\modules\stimpack.dm"
 #include "Oasis\code\modules\powerarmor\pa_parts\_part.dm"
