@@ -3,9 +3,9 @@ Credits:
 	NDOcelot
 		for all the monkey code and most of the sprites;
 	TottalyNotC
-		for his balance recommendations, concepts and sprites of "Pangolin", "Mk.II APA" and "Praetor" armor sets and stimpack module;
+		for his balance recommendations, sprites and concepts;
 	NDHavch1k
-		for his balance recommendations, "Mk.II APA" helmet and "Praetor" armor set sprites and willing to be helpful.
+		for his balance recommendations, sprites and code;
 */
 
 /obj/item/clothing/suit/armor/exoskeleton
@@ -498,25 +498,26 @@ Accepts:
 Applies and removes armor set bonuses regarding the amount of parts from one set.
 */
 /obj/item/clothing/suit/armor/exoskeleton/proc/update_set_bonus()
-	var/list/sets = new
-	for(var/P in parts)
-		var/obj/item/power_armor_part/part = parts[P]
-		if(!istype(part) || !part.set_bonus)
-			continue
-		var/datum/component/power_armor_set_bonus/set_type = part.set_bonus.type
-		sets[set_type] = (sets[set_type] || 0) + 1
+	return
+	// var/list/sets = new
+	// for(var/P in parts)
+	// 	var/obj/item/power_armor_part/part = parts[P]
+	// 	if(!istype(part) || !part.set_bonus)
+	// 		continue
+	// 	var/datum/component/power_armor_set_bonus/set_type = part.set_bonus.type
+	// 	sets[set_type] = (sets[set_type] || 0) + 1
 
-	// Firstly, we remove existing set bonuses if there's not enough parts for full set...
-	for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
-		if((sets[set_bonus.type] || 0) < set_bonus.amount_for_full_set)
-			set_bonus.deactivate()
-			set_bonuses.Remove(set_bonus)
+	// // Firstly, we remove existing set bonuses if there's not enough parts for full set...
+	// for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
+	// 	if((sets[set_bonus.type] || 0) < set_bonus.amount_for_full_set)
+	// 		set_bonus.deactivate()
+	// 		set_bonuses.Remove(set_bonus)
 
-	// Then, we add non-existing bonuses...
-	for(var/datum/component/power_armor_set_bonus/set_type in sets)
-		if(sets[set_type] >= set_type.amount_for_full_set)
-			var/new_bonus = AddComponent(/datum/component/power_armor_set_bonus)
-			set_bonuses.Add(new_bonus)
+	// // Then, we add non-existing bonuses...
+	// for(var/datum/component/power_armor_set_bonus/set_type in sets)
+	// 	if(sets[set_type] >= set_type.amount_for_full_set)
+	// 		var/new_bonus = AddComponent(/datum/component/power_armor_set_bonus)
+	// 		set_bonuses.Add(new_bonus)
 
 /obj/item/clothing/suit/armor/exoskeleton/attackby(obj/item/W, mob/user, params)
 	var/equipped = is_equipped(user)
