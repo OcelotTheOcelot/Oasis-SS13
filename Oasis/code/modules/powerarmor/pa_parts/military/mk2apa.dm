@@ -3,7 +3,7 @@
 	desc = "<TODO>"
 	icon = 'Oasis/icons/powerarmor/pa_parts/mk2apa.dmi'
 	repair_materials = list(
-		/obj/item/stack/sheet/titanium = 1,
+		/obj/item/stack/sheet/mineral/titanium = 1,
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.4
@@ -19,7 +19,7 @@
 	desc = "<TODO>"
 	icon = 'Oasis/icons/powerarmor/pa_parts/mk2apa.dmi'
 	repair_materials = list(
-		/obj/item/stack/sheet/titanium = 1,
+		/obj/item/stack/sheet/mineral/titanium = 1,
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.3
@@ -32,7 +32,7 @@
 	desc = "<TODO>"
 	icon = 'Oasis/icons/powerarmor/pa_parts/mk2apa.dmi'
 	repair_materials = list(
-		/obj/item/stack/sheet/titanium = 1,
+		/obj/item/stack/sheet/mineral/titanium = 1,
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.3
@@ -46,7 +46,7 @@
 	desc = "<TODO>"
 	icon = 'Oasis/icons/powerarmor/pa_parts/mk2apa.dmi'
 	repair_materials = list(
-		/obj/item/stack/sheet/titanium = 1,
+		/obj/item/stack/sheet/mineral/titanium = 1,
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.3
@@ -61,7 +61,7 @@
 	desc = "<TODO>"
 	icon = 'Oasis/icons/powerarmor/pa_parts/mk2apa.dmi'
 	repair_materials = list(
-		/obj/item/stack/sheet/titanium = 1,
+		/obj/item/stack/sheet/mineral/titanium = 1,
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.3

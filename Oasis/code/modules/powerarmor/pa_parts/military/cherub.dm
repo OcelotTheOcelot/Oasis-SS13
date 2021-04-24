@@ -2,7 +2,7 @@
 	name = "\"Cherub\" power armor chestplate"
 	desc = "\"Cherub\" armor was designed with state of the art technologies, providing heavy protection at the cost of the wearers movement speed."
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
-	repair_materials = list(/obj/item/stack/sheet/titanium = 1)
+	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 1
 	render_priority = 5
 	tier = POWER_ARMOR_GRADE_MILITARY
@@ -15,7 +15,7 @@
 	name = "\"Cherub\" power armor left arm"
 	desc = "\"Cherub\" armor was designed with state of the art technologies, providing heavy protection at the cost of the wearers movement speed."
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
-	repair_materials = list(/obj/item/stack/sheet/titanium = 1)
+	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 0.8
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 170
@@ -25,7 +25,7 @@
 	name = "\"Cherub\" power armor right arm"
 	desc = "\"Cherub\" armor was designed with state of the art technologies, providing heavy protection at the cost of the wearers movement speed."
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
-	repair_materials = list(/obj/item/stack/sheet/titanium = 1)
+	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 0.8
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 170
@@ -35,7 +35,7 @@
 	name = "\"Cherub\" power armor left leg"
 	desc = "\"Cherub\" armor was designed with state of the art technologies, providing heavy protection at the cost of the wearers movement speed."
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
-	repair_materials = list(/obj/item/stack/sheet/titanium = 1)
+	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 0.8
 	render_priority = 0
 	tier = POWER_ARMOR_GRADE_MILITARY
@@ -46,7 +46,7 @@
 	name = "\"Cherub\" power armor right leg"
 	desc = "\"Cherub\" armor was designed with state of the art technologies, providing heavy protection at the cost of the wearers movement speed."
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
-	repair_materials = list(/obj/item/stack/sheet/titanium = 1)
+	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 0.8
 	render_priority = 0
 	tier = POWER_ARMOR_GRADE_MILITARY
