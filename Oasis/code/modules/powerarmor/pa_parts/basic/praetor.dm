@@ -45,6 +45,7 @@ Furthermore, when fully equipped, the armor set gives the wearer additional prot
 	set_bonus = /datum/component/power_armor_set_bonus/praetor
 	max_integrity = 80
 	armor_points = 60
+	item_inhand_offsets = list("x" = 1, "y" = 3)
 
 /obj/item/power_armor_part/r_arm/praetor/Initialize()
 	..()
@@ -60,6 +61,7 @@ Furthermore, when fully equipped, the armor set gives the wearer additional prot
 	set_bonus = /datum/component/power_armor_set_bonus/praetor
 	max_integrity = 80
 	armor_points = 60
+	item_inhand_offsets = list("x" = 1, "y" = 3)
 
 /obj/item/power_armor_part/l_leg/praetor/Initialize()
 	..()

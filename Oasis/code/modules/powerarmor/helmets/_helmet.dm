@@ -27,6 +27,12 @@
 
 	var/armor_set  // String describing what armor set this helmet belongs to; needed only to activate set bonuses
 
+	// List of materials needed to repair the helmet and their coefficients (armor_points_per_sheet multiplier)
+	var/list/repair_materials = list(
+		/obj/item/stack/sheet/iron = 1
+	)
+	var/list/armor_points_per_sheet = 20  // How many integrity points are restored with one sheet of material
+
 /obj/item/clothing/head/helmet/power_armor/Initialize()
 	..()
 	worn_y_dimension += EXOSKELETON_ADDITIONAL_HEIGHT * 2

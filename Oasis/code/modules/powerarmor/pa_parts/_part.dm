@@ -44,7 +44,7 @@
 	var/list/repair_materials = list(
 		/obj/item/stack/sheet/iron = 1
 	)
-	var/list/armor_points_per_sheet = 20
+	var/list/armor_points_per_sheet = 20  // How many integrity points are restored with one sheet of material
 
 /obj/item/power_armor_part/Initialize()
 	..()
@@ -249,15 +249,21 @@ Returns:
 /obj/item/power_armor_part/proc/try_apply_item(obj/item/I, mob/user)
 	if(SEND_SIGNAL(src, COMSIG_POWER_ARMOR_PART_APPLY_ITEM, I, user))
 		return TRUE
+	for(var/M in modules)
+		if(modules[M]?.try_apply_item(I, user))
+			return TRUE
+
 	for(var/material_type in repair_materials)
 		if(!istype(I, material_type))
 			continue
+		if(exoskeleton?.wearer == user)
+			to_chat(user, "<span class='warning'>You can't repair armor while wearing it!</span>")
+			return TRUE
 		if(max_integrity == obj_integrity)
 			to_chat(user, "<span class='notice'>\The [src] is already intact.</span>")
 			return TRUE
 		var/obj/item/stack/sheet/S = I
-		var/to_repair = CLAMP(S.amount * armor_points_per_sheet, 0, max_integrity - obj_integrity)
-		
+		var/to_repair = CLAMP(S.amount * armor_points_per_sheet * (repair_materials[material_type] || 1), 0, max_integrity - obj_integrity)
 		var/fuel_to_use = to_repair * POWER_ARMOR_REPAIR_FUEL_CONSUMPTION
 		var/obj/item/welder = find_tool(user, TOOL_WELDER)
 		if(!welder)
@@ -280,9 +286,6 @@ Returns:
 			to_chat(user, "<span class='notice'>You repair \the [src] with [I].</span>")
 		return TRUE
 
-	for(var/M in modules)
-		if(modules[M]?.try_apply_item(I, user))
-			return TRUE
 	return FALSE
 
 /* Get armor points percent
@@ -366,7 +369,7 @@ Returns:
 	icon_state = "l_arm_item"
 	part_icon_state = "l_arm"
 	render_priority = POWER_ARMOR_LAYER_ARMS
-	var/item_inhand_offsets = list("x" = 1, "y" = 4)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
+	var/item_inhand_offsets = list("x" = 1, "y" = 2)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
 
 /obj/item/power_armor_part/r_arm
 	slot = EXOSKELETON_SLOT_R_ARM
@@ -376,7 +379,7 @@ Returns:
 	icon_state = "r_arm_item"
 	part_icon_state = "r_arm"
 	render_priority = POWER_ARMOR_LAYER_ARMS
-	var/item_inhand_offsets = list("x" = 1, "y" = 4)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
+	var/item_inhand_offsets = list("x" = 1, "y" = 2)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
 
 /obj/item/power_armor_part/l_leg
 	slot = EXOSKELETON_SLOT_L_LEG

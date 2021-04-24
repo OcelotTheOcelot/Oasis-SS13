@@ -13,6 +13,7 @@
 	slowdown = 0.3
 	pauldron_compatible = FALSE
 	module_slots = MODULE_SLOT_ARM_ALT
+	item_inhand_offsets = list("x" = 1, "y" = 4)
 
 /obj/item/power_armor_part/r_arm/p5000pwl
 	name = "p5000-Loader PA right manipulator"
@@ -21,6 +22,7 @@
 	slowdown = 0.3
 	pauldron_compatible = FALSE
 	module_slots = MODULE_SLOT_ARM_ALT
+	item_inhand_offsets = list("x" = 1, "y" = 4)
 
 /obj/item/power_armor_part/l_leg/p5000pwl
 	name = "p5000-Loader PA left leg"
