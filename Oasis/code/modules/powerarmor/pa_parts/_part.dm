@@ -40,6 +40,12 @@
 	var/airtight = FALSE  // Wheter this part protects the limb from space or not <TODO> still unused, may be should be removed
 	var/pauldron_compatible = TRUE  // If this part can be attached to an exoskeleton with pauldrons; intended to be used with arms, but transfered to their parent for better compatibility
 
+	// List of materials needed to repair the part and their coefficients (armor_points_per_sheet multiplier)
+	var/list/repair_materials = list(
+		/obj/item/stack/sheet/iron = 1
+	)
+	var/list/armor_points_per_sheet = 20
+
 /obj/item/power_armor_part/Initialize()
 	..()
 	if(part_icon_state)
@@ -219,6 +225,7 @@ Breaks the part and disables correlated limbs.
 		modules[M]?.on_part_broken()
 	if(exoskeleton?.wearer)
 		to_chat(exoskeleton.wearer, "<span class='userdanger'>\The [src] took too much damage! It is broken!</span>")
+		exoskeleton.wearer.get_bodypart(protected_bodyzone)?.GetComponent(/datum/component/power_armor_damage_interceptor)?.RemoveComponent()
 
 /* Set limb disabled
 Disables the limb covered by this part.
@@ -237,10 +244,42 @@ Accepts:
 	I, the item that the user tries to apply
 	user, the mob applying the item
 Returns:
-	TRUE if the item was applied successfully, FALSE otherwise; returning TRUE is supposed to prevent other try_apply_item and attackby interactions 
+	TRUE if there was a successful application attempt, FALSE otherwise; returning TRUE is supposed to prevent other try_apply_item and attackby interactions 
 */
 /obj/item/power_armor_part/proc/try_apply_item(obj/item/I, mob/user)
-	SEND_SIGNAL(src, COMSIG_POWER_ARMOR_PART_APPLY_ITEM, I, user)
+	if(SEND_SIGNAL(src, COMSIG_POWER_ARMOR_PART_APPLY_ITEM, I, user))
+		return TRUE
+	for(var/material_type in repair_materials)
+		if(!istype(I, material_type))
+			continue
+		if(max_integrity == obj_integrity)
+			to_chat(user, "<span class='notice'>\The [src] is already intact.</span>")
+			return TRUE
+		var/obj/item/stack/sheet/S = I
+		var/to_repair = CLAMP(S.amount * armor_points_per_sheet, 0, max_integrity - obj_integrity)
+		
+		var/fuel_to_use = to_repair * POWER_ARMOR_REPAIR_FUEL_CONSUMPTION
+		var/obj/item/welder = find_tool(user, TOOL_WELDER)
+		if(!welder)
+			to_chat(user, "<span class='warning'>You need a working welding tool to repair \the [src]!</span>")
+			return TRUE
+		if(!welder.tool_start_check(user, fuel_to_use))
+			return TRUE
+		if(do_after(user, to_repair * POWER_ARMOR_REPAIR_TIME_MULTIPLIER, target = src))
+			// We do a double check for we don't know what might have happened during the do_after check.
+			welder = find_tool(user, TOOL_WELDER)
+			if(!welder) 
+				to_chat(user, "<span class='warning'>You need a working welding tool to repair \the [src]!</span>")
+				return TRUE
+			if(!welder.tool_start_check(user, fuel_to_use))
+				return TRUE
+
+			welder.use(fuel_to_use)
+			var/to_use = CEILING(repair(to_repair)/armor_points_per_sheet, 1)
+			S.use(to_use)
+			to_chat(user, "<span class='notice'>You repair \the [src] with [I].</span>")
+		return TRUE
+
 	for(var/M in modules)
 		if(modules[M]?.try_apply_item(I, user))
 			return TRUE

@@ -214,12 +214,12 @@ Accepts:
 		// Note: x-offset is not implemented and I doubt it is possible to be.
 		var/obj/item/power_armor_part/l_arm/l_arm = parts[EXOSKELETON_SLOT_L_ARM]
 		if(istype(l_arm))
-			user.item_inhand_offsets[1]["y"] += l_arm.item_inhand_offsets["y"]
+			user.item_inhand_offsets[1]["y"] -= l_arm.item_inhand_offsets["y"]
 		var/obj/item/power_armor_part/r_arm/r_arm = parts[EXOSKELETON_SLOT_R_ARM]
 		if(istype(r_arm))
-			user.item_inhand_offsets[2]["y"] += r_arm.item_inhand_offsets["y"]
+			user.item_inhand_offsets[2]["y"] -= r_arm.item_inhand_offsets["y"]
 	else
-		// Believe me I intented to make it initial(C.item_inhand_offsets), but it returns null smh...
+		// Believe me I intented to make it initial(C.item_inhand_offsets), but it returns null; I guess it's because lists aren't initialized when set as default values.
 		user.item_inhand_offsets = list(
 			list("x" = 0, "y" = 0),
 			list("x" = 0, "y" = 0)
@@ -564,8 +564,8 @@ Applies and removes armor set bonuses regarding the amount of parts from one set
 			to_chat(user, "<span class='warning'>You can not add parts to \the [src] while you are wearing it!</span>")
 			return TRUE
 		var/obj/item/power_armor_part/part = W
-		var/obj/item/other_item = user.get_inactive_held_item()
-		if(!other_item || other_item.tool_behaviour != TOOL_WRENCH)
+		var/obj/item/other_tool = find_tool(user, TOOL_WRENCH)
+		if(!other_tool)
 			to_chat(user, "<span class='warning'>You need a wrench to attach parts to \the [src].</span>")
 			return TRUE
 		if(part.tier > tier)
@@ -594,7 +594,7 @@ Applies and removes armor set bonuses regarding the amount of parts from one set
 			to_chat(user, "<span class='warning'>This junction is already occupied by \the [previous_part]!</span>")
 			return TRUE
 		to_chat(user, "<span class='notice'>You begin to attach \the [W] to \the [src]...</span>")
-		other_item.play_tool_sound(src)
+		other_tool.play_tool_sound(src)
 		if(do_after(user, part.attachment_speed, target = src) && user.transferItemToLoc(W, src))
 			attach_part(part, transfer = FALSE)
 			playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
@@ -640,4 +640,25 @@ Applies and removes armor set bonuses regarding the amount of parts from one set
 		return TRUE
 
 	return ..(W, user, params)
- 
+
+/* Find tool
+Checks if some tool is present nearby the user
+This proc exists in order to not change exisiting /datum/component/personal_crafting/proc/check_tools,
+because it wasn't flexible enough for this particular case.
+Accepts:
+	user, the mob to find the tool nearby,
+	tool_behaviour, what type of tool that should be
+	blacklist, a list of types of items to be ignored during the search
+	radius_range, the range of the area to search in
+Returns:
+	found item or null
+*/
+proc/find_tool(mob/living/user, tool_behaviour, list/blacklist = null, radius_range = 1)
+	if(!isturf(user.loc))
+		return null
+	for(var/obj/item/I in range(radius_range, user))
+		if((I.flags_1 & HOLOGRAM_1) || (blacklist && (I.type in blacklist)))
+			continue
+		if((I.tool_behaviour == tool_behaviour))
+			return I
+	return null

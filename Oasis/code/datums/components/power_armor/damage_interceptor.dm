@@ -83,6 +83,9 @@ Returns:
 	var/obj/item/bodypart/BP = parent_as_bodypart()
 	if(!BP)
 		return FALSE
+	if(!is_protecting())
+		return FALSE
+
 	to_chat(BP.owner, "<span class='boldwarning'>DEBUG: [interceptor] intercepts damage incoming to [BP]: \[[brute]/[burn]/[stamina]\]...</span>")
 	
 	/* Believe me it would be quite painful to overhaul the entire hitsound system, therefore we have sound_effect=FALSE
