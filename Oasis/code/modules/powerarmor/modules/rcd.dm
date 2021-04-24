@@ -1,6 +1,6 @@
 /obj/item/power_armor_module/rcd
-	name = "rapid-construction-device (RCD)"
-	desc = "A module containing a deployable RCD"
+	name = "rapid-construction-device module"
+	desc = "A module containing a deployable RCD."
 	icon = 'Oasis/icons/powerarmor/modules/rcd.dmi'
 	slot = MODULE_SLOT_ARM
 	locks_hand = FALSE
@@ -18,9 +18,10 @@
 
 /obj/item/construction/rcd/power_armor_module
 	name = "rapid-construction-device (RCD)"
-	desc = "A deployable RCD"
-	icon = 'icons/obj/tools.dmi'
-	icon_state = "rcd"
+	desc = "A deployable RCD installed in the exoskeleton."
+	icon = 'Oasis/icons/powerarmor/modules/rcd.dmi'
+	icon_state = "held_item"
+	item_state = "rcd"
 	lefthand_file = 'Oasis/icons/powerarmor/modules/in_hands/module_items_lefthand.dmi'
 	righthand_file = 'Oasis/icons/powerarmor/modules/in_hands/module_items_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
