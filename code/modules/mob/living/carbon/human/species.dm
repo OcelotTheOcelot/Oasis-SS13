@@ -1352,9 +1352,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		target.lastattackerckey = user.ckey
 		user.dna.species.spec_unarmedattacked(user, target)
 
-		// Power armor damage interception prevents dismembering and fleshy hit sound
+		// Power armor damage interception prevents dismembering and stamina damage
+		var/apply_stamina_damage = TRUE
 		if(affecting.is_protected_by_power_armor())
 			affecting.get_interceptor().interceptor?.play_attack_sound(damage, attack_type)
+			apply_stamina_damage = FALSE  // Lest we stamcrit ERT team with our bare hands
 		else
 			playsound(target.loc, user.dna.species.attack_sound, 25, 1, -1)
 			if(user.limb_destroyer)
@@ -1365,7 +1367,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			log_combat(user, target, "kicked")
 		else//other attacks deal full raw damage + 1.5x in stamina damage
 			target.apply_damage(damage, attack_type, affecting, armor_block)
-			target.apply_damage(damage*1.5, STAMINA, affecting, armor_block)
+			if(apply_stamina_damage)
+				target.apply_damage(damage*1.5, STAMINA, affecting, armor_block)
 			log_combat(user, target, "punched")
 
 /datum/species/proc/spec_unarmedattacked(mob/living/carbon/human/user, mob/living/carbon/human/target)
