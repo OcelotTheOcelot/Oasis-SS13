@@ -338,6 +338,7 @@
 	. = ..()
 	if(.)
 		var/damage = M.melee_damage
+		damage *= GetComponent(/datum/component/faction_damage_resistance)?.get_multiplier(M) || 1
 		if(check_shields(M, damage, "the [M.name]", MELEE_ATTACK, M.armour_penetration))
 			return FALSE
 		var/dam_zone = dismembering_strike(M, pick(BODY_ZONE_CHEST, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))

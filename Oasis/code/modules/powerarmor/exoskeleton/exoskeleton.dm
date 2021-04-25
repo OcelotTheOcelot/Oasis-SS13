@@ -1,4 +1,5 @@
 /* Power armor system by NDOcelot (#4852)
+Initially made for Oasis Station, may it rest in peace.
 Credits:
 	NDOcelot
 		for all the monkey code and most of the sprites;
@@ -143,9 +144,10 @@ Couldn't be implemented with for loop because of different render layers.
 
 		if(eject_action)
 			eject_action.Grant(user, src)
-		ADD_TRAIT(user, TRAIT_EXOSKELETON, CLOTHING_TRAIT)
 		for(var/P in parts)
 			parts[P].on_wearer_entered(user)
+		for(var/datum/component/power_armor_set_bonus/B in set_bonuses)
+			B.on_wearer_entered(user)
 
 		if(powered && !activated)
 			activate()
@@ -162,6 +164,8 @@ Couldn't be implemented with for loop because of different render layers.
 	if(is_equipped(user))
 		for(var/P in parts)
 			parts[P].on_wearer_left(user)
+		for(var/datum/component/power_armor_set_bonus/B in set_bonuses)
+			B.on_wearer_left(user)
 
 		if(eject_action)
 			eject_action.Remove(user)
@@ -171,7 +175,6 @@ Couldn't be implemented with for loop because of different render layers.
 		if(istype(helmet) && !helmet.mob_can_equip(user, user, ITEM_SLOT_HEAD, disable_warning = TRUE))
 			user.dropItemToGround(helmet)
 
-		REMOVE_TRAIT(user, TRAIT_EXOSKELETON, CLOTHING_TRAIT)
 		wearer = null
 
 		if(activated)

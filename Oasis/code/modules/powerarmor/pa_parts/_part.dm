@@ -215,6 +215,7 @@ Called when the part is attached to an exoskeleton.
 
 /* Break
 Breaks the part and disables correlated limbs.
+Note: we shouldn't remove the interceptor itsef for it's supposed to disable the limb properly.
 */
 /obj/item/power_armor_part/proc/break_part()
 	if(broken)
@@ -225,7 +226,6 @@ Breaks the part and disables correlated limbs.
 		modules[M]?.on_part_broken()
 	if(exoskeleton?.wearer)
 		to_chat(exoskeleton.wearer, "<span class='userdanger'>\The [src] took too much damage! It is broken!</span>")
-		exoskeleton.wearer.get_bodypart(protected_bodyzone)?.GetComponent(/datum/component/power_armor_damage_interceptor)?.RemoveComponent()
 
 /* Set limb disabled
 Disables the limb covered by this part.

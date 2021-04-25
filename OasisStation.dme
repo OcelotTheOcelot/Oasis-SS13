@@ -43,6 +43,7 @@
 #include "Oasis\code\datums\power_armor_overlay.dm"
 #include "Oasis\code\datums\world_topic.dm"
 #include "Oasis\code\datums\components\power_armor\damage_interceptor.dm"
+#include "Oasis\code\datums\components\power_armor\faction_damage_resistance.dm"
 #include "Oasis\code\datums\components\power_armor\power_armor_item.dm"
 #include "Oasis\code\datums\components\power_armor\praetor_armor_plate.dm"
 #include "Oasis\code\datums\components\power_armor\set_bonus.dm"

@@ -2,7 +2,7 @@
 
 //non-mob traits
 
-// item traits
+//item traits
 
 //quirk traits
 
@@ -10,4 +10,3 @@
 #define TRAIT_POWER_ARMOR "power_armor"  // The item is added by power armor features
 
 // unique trait sources, still defines
-#define TRAIT_EXOSKELETON "exoskeleton_trait"

@@ -30,3 +30,19 @@ Used to revert changes done with activate proc.
 /datum/component/power_armor_set_bonus/proc/deactivate()
 	RemoveComponent(src)
 	return
+
+/* On wearer entered
+Called when the wearer enters the exoskeleton.
+Accepts:
+	user, the wearer
+*/
+/datum/component/power_armor_set_bonus/proc/on_wearer_entered(mob/living/user)
+	return
+
+/* On wearer left
+Called when the wearer leaves the exoskeleton.
+Accepts:
+	user, the wearer
+*/
+/datum/component/power_armor_set_bonus/proc/on_wearer_left(mob/living/user)
+	return
