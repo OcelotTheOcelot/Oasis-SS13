@@ -455,7 +455,6 @@ Returns:
 	TRUE if the bodypart is protected by a not broken piece of power armor, FALSE otherwise.
 */
 /obj/item/bodypart/proc/is_protected_by_power_armor()
-	to_chat(owner, "[src]'s interceptor: [get_interceptor()], protecting: [get_interceptor()?.is_protecting()]")
 	return get_interceptor()?.is_protecting() || FALSE
 
 /* Get interceptor

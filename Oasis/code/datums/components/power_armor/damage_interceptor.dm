@@ -86,8 +86,6 @@ Returns:
 	if(!is_protecting())
 		return FALSE
 
-	to_chat(BP.owner, "<span class='boldwarning'>DEBUG: [interceptor] intercepts damage incoming to [BP]: \[[brute]/[burn]/[stamina]\]...</span>")
-	
 	/* Believe me it would be quite painful to overhaul the entire hitsound system, therefore we have sound_effect=FALSE
 	Later, we could transfer hitsound from item_attack to mobs and objs attacked_by proc, but this is not the prerogative for now.  
 	Even sand golems don't have custom hitsounds, come on!.. 
