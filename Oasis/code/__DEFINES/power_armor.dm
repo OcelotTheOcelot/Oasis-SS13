@@ -51,3 +51,5 @@
 
 #define POWER_ARMOR_REPAIR_TIME_MULTIPLIER	1
 #define POWER_ARMOR_REPAIR_FUEL_CONSUMPTION	0.1  // i.e. 1 unit of fuel per 10 armor points
+
+#define POWER_ARMOR_FULL_SET	6

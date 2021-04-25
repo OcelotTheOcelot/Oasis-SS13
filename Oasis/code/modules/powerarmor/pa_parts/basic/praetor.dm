@@ -83,5 +83,5 @@ Furthermore, when fully equipped, the armor set gives the wearer additional prot
 	AddComponent(/datum/component/praetor_armor_plate)
 
 /datum/component/power_armor_set_bonus/praetor
-	name = "praetor"
-	desc = "Full set of \"Praetor\" armor provides you robust protection from loval fauna, halving the incoming damage."
+	desc = "Full set of \"Praetor\" armor provides you robust protection from the local fauna, halving the incoming damage."
+	amount_for_full_set = 5

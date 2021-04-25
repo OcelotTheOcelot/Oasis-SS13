@@ -62,5 +62,4 @@
 	armor_points = 150
 
 /datum/component/power_armor_set_bonus/pangolin
-	name = "pangolin"
 	desc = "Full set of \"Pangolin\" armor provides you ability to activate more mobile form of the suit."

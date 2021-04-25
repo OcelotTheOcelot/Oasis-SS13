@@ -112,7 +112,8 @@ Couldn't be implemented with for loop because of different render layers.
 			. += additional_info
 
 	for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
-		. += "<span class='boldnotice'>[set_bonus.desc]</span>"
+		if(set_bonus.desc)
+			. += "<span class='boldnotice'>[set_bonus.desc]</span>"
 
 /obj/item/clothing/suit/armor/exoskeleton/Destroy()
 	if(!QDELETED(cell))
@@ -340,7 +341,7 @@ Accepts:
 	update_slowdown()
 	update_appearances()
 	toggle_hand_offsets(wearer, TRUE)
-	update_set_bonus()
+	update_set_bonuses()
 	update_icon()
 
 /* Detach part
@@ -368,7 +369,7 @@ Accepts:
 	update_slowdown()
 	update_appearances()
 	toggle_hand_offsets(wearer, TRUE)
-	update_set_bonus()
+	update_set_bonuses()
 	update_icon()
 
 /obj/item/clothing/suit/armor/exoskeleton/update_icon()
@@ -494,30 +495,32 @@ Accepts:
 		return
 	return ..()
 
-/* Update set bonus
+/* Update set bonuses
 Applies and removes armor set bonuses regarding the amount of parts from one set.
 */
-/obj/item/clothing/suit/armor/exoskeleton/proc/update_set_bonus()
-	return
-	// var/list/sets = new
-	// for(var/P in parts)
-	// 	var/obj/item/power_armor_part/part = parts[P]
-	// 	if(!istype(part) || !part.set_bonus)
-	// 		continue
-	// 	var/datum/component/power_armor_set_bonus/set_type = part.set_bonus.type
-	// 	sets[set_type] = (sets[set_type] || 0) + 1
+/obj/item/clothing/suit/armor/exoskeleton/proc/update_set_bonuses()
+	var/list/sets = new
+	for(var/P in parts)
+		var/obj/item/power_armor_part/part = parts[P]
+		if(!istype(part) || !part.set_bonus)
+			continue
+		var/datum/component/power_armor_set_bonus/set_type = part.set_bonus
+		sets[set_type] = (sets[set_type] || 0) + 1
 
-	// // Firstly, we remove existing set bonuses if there's not enough parts for full set...
-	// for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
-	// 	if((sets[set_bonus.type] || 0) < set_bonus.amount_for_full_set)
-	// 		set_bonus.deactivate()
-	// 		set_bonuses.Remove(set_bonus)
+	// Firstly, we remove existing set bonuses if there's not enough parts for full set...
+	for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
+		if((sets[set_bonus.type] || 0) < set_bonus.amount_for_full_set)
+			set_bonuses.Remove(set_bonus)
+			set_bonus.deactivate()
 
-	// // Then, we add non-existing bonuses...
-	// for(var/datum/component/power_armor_set_bonus/set_type in sets)
-	// 	if(sets[set_type] >= set_type.amount_for_full_set)
-	// 		var/new_bonus = AddComponent(/datum/component/power_armor_set_bonus)
-	// 		set_bonuses.Add(new_bonus)
+	// Then, we add non-existing bonuses...
+	for(var/set_type in sets)
+		if(!ispath(set_type, /datum/component/power_armor_set_bonus))
+			continue
+		var/datum/component/power_armor_set_bonus/SB = set_type
+		if(sets[set_type] >= initial(SB.amount_for_full_set))
+			var/new_bonus = AddComponent(set_type)
+			set_bonuses.Add(new_bonus)
 
 /obj/item/clothing/suit/armor/exoskeleton/attackby(obj/item/W, mob/user, params)
 	var/equipped = is_equipped(user)
