@@ -25,7 +25,7 @@
 	var/list/modules = new  // This list contains the modules installed in the part
 	var/mob/living/wearer  // Current wearer of the suit; should be faster than the loc check 
 
-	var/armor_set  // String describing what armor set this helmet belongs to; needed only to activate set bonuses
+	var/datum/component/power_armor_set_bonus/set_bonus  // Type of component responsible for handling full set bonus 
 
 	// List of materials needed to repair the helmet and their coefficients (armor_points_per_sheet multiplier)
 	var/list/repair_materials = list(
@@ -85,12 +85,14 @@ Accepts:
 	if(!istype(exoskeleton))
 		return
 	src.exoskeleton = exoskeleton
+	exoskeleton.update_set_bonuses()
 
 /* Desynchronize with exosketon
 Cancels changes made by synchronize_with_exoskeleton
 */
 /obj/item/clothing/head/helmet/power_armor/proc/desynchronize_with_exoskeleton()
 	exoskeleton = null
+	exoskeleton.update_set_bonuses()
 
 /* Is equipped
 Helper proc used to determine if the helmet is equipped by the wearer.

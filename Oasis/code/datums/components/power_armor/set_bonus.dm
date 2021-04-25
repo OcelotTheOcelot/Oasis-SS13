@@ -28,7 +28,10 @@ Deactivates the bonus and suicides.
 Used to revert changes done with activate proc.
 */
 /datum/component/power_armor_set_bonus/proc/deactivate()
-	RemoveComponent(src)
+	var/mob/living/user = parent_as_exoskeleton()?.wearer
+	if(user)
+		on_wearer_left(user)
+	RemoveComponent()
 	return
 
 /* On wearer entered

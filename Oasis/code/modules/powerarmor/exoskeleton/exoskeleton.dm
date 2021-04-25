@@ -171,8 +171,9 @@ Couldn't be implemented with for loop because of different render layers.
 			eject_action.Remove(user)
 
 		toggle_offsets(user, FALSE)
-		var/obj/item/clothing/head/helmet/power_armor/helmet = user.get_item_by_slot(ITEM_SLOT_HEAD)
-		if(istype(helmet) && !helmet.mob_can_equip(user, user, ITEM_SLOT_HEAD, disable_warning = TRUE))
+		
+		var/obj/item/clothing/head/helmet/power_armor/helmet = get_helmet()
+		if(helmet && !helmet.mob_can_equip(user, user, ITEM_SLOT_HEAD, disable_warning = TRUE))
 			user.dropItemToGround(helmet)
 
 		wearer = null
@@ -498,6 +499,17 @@ Accepts:
 		return
 	return ..()
 
+/* Get helmet
+Helper proc that attempts to get current wearer's power armor helmet.
+Returns:
+	the helmet if it was found, null otherwise
+*/
+/obj/item/clothing/suit/armor/exoskeleton/proc/get_helmet()
+	var/obj/item/clothing/head/helmet/power_armor/helmet = wearer?.get_item_by_slot(ITEM_SLOT_HEAD)
+	if(!istype(helmet))
+		return null
+	return helmet
+
 /* Update set bonuses
 Applies and removes armor set bonuses regarding the amount of parts from one set.
 */
@@ -505,10 +517,14 @@ Applies and removes armor set bonuses regarding the amount of parts from one set
 	var/list/sets = new
 	for(var/P in parts)
 		var/obj/item/power_armor_part/part = parts[P]
-		if(!istype(part) || !part.set_bonus)
+		if(!istype(part) || !ispath(part.set_bonus, /datum/component/power_armor_set_bonus))
 			continue
 		var/datum/component/power_armor_set_bonus/set_type = part.set_bonus
 		sets[set_type] = (sets[set_type] || 0) + 1
+	
+	var/obj/item/clothing/head/helmet/power_armor/helmet = get_helmet()
+	if(ispath(helmet?.set_bonus, /datum/component/power_armor_set_bonus))
+		sets[helmet.set_bonus] = (sets[helmet.set_bonus] || 0) + 1
 
 	// Firstly, we remove existing set bonuses if there's not enough parts for full set...
 	for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
