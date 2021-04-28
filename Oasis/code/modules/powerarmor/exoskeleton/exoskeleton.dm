@@ -516,12 +516,10 @@ Applies and removes armor set bonuses regarding the amount of parts from one set
 /obj/item/clothing/suit/armor/exoskeleton/proc/update_set_bonuses()
 	var/list/sets = new
 	for(var/P in parts)
-		var/obj/item/power_armor_part/part = parts[P]
-		if(!istype(part) || !ispath(part.set_bonus, /datum/component/power_armor_set_bonus))
-			continue
-		var/datum/component/power_armor_set_bonus/set_type = part.set_bonus
-		sets[set_type] = (sets[set_type] || 0) + 1
-	
+		for(var/set_type in parts[P].set_bonuses)
+			if(!ispath(set_type, /datum/component/power_armor_set_bonus))
+				continue
+			sets[set_type] = (sets[set_type] || 0) + 1
 	var/obj/item/clothing/head/helmet/power_armor/helmet = get_helmet()
 	if(ispath(helmet?.set_bonus, /datum/component/power_armor_set_bonus))
 		sets[helmet.set_bonus] = (sets[helmet.set_bonus] || 0) + 1
@@ -530,11 +528,18 @@ Applies and removes armor set bonuses regarding the amount of parts from one set
 	for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
 		if((sets[set_bonus.type] || 0) < set_bonus.amount_for_full_set)
 			set_bonuses.Remove(set_bonus)
-			set_bonus.deactivate()
+			set_bonus.RemoveComponent()
 
 	// Then, we add non-existing bonuses...
 	for(var/set_type in sets)
 		if(!ispath(set_type, /datum/component/power_armor_set_bonus))
+			continue
+		var/already_exists = FALSE
+		for(var/datum/component/power_armor_set_bonus/set_bonus in set_bonuses)
+			if(istype(set_bonus, set_type))
+				already_exists = TRUE
+				break
+		if(already_exists)
 			continue
 		var/datum/component/power_armor_set_bonus/SB = set_type
 		if(sets[set_type] >= initial(SB.amount_for_full_set))

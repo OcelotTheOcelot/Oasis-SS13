@@ -5,6 +5,7 @@ However, it also has unsurpassed durability, providing the wearer with best poss
 The origin of this armor is unknown. The most obvious guess would be that these are secret developments of the Third Soviet Union."
 	icon = 'Oasis/icons/powerarmor/pa_parts/samovar.dmi'
 	slowdown = 1.5
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	render_priority = POWER_ARMOR_LAYER_TORSO_ALT
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 320
@@ -18,6 +19,7 @@ However, it also has unsurpassed durability, providing the wearer with best poss
 The origin of this armor is unknown. The most obvious guess would be that these are secret developments of the Third Soviet Union."
 	icon = 'Oasis/icons/powerarmor/pa_parts/samovar.dmi'
 	slowdown = 1
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 180
 	armor_points = 200
@@ -29,6 +31,7 @@ However, it also has unsurpassed durability, providing the wearer with best poss
 The origin of this armor is unknown. The most obvious guess would be that these are secret developments of the Third Soviet Union."
 	icon = 'Oasis/icons/powerarmor/pa_parts/samovar.dmi'
 	slowdown = 1
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 180
 	armor_points = 200
@@ -40,6 +43,7 @@ However, it also has unsurpassed durability, providing the wearer with best poss
 The origin of this armor is unknown. The most obvious guess would be that these are secret developments of the Third Soviet Union."
 	icon = 'Oasis/icons/powerarmor/pa_parts/samovar.dmi'
 	slowdown = 1
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 180
 	armor_points = 200
@@ -51,6 +55,7 @@ However, it also has unsurpassed durability, providing the wearer with best poss
 The origin of this armor is unknown. The most obvious guess would be that these are secret developments of the Third Soviet Union."
 	icon = 'Oasis/icons/powerarmor/pa_parts/samovar.dmi'
 	slowdown = 1
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 180
 	armor_points = 200

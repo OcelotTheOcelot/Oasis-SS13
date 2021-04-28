@@ -5,6 +5,7 @@
 	max_integrity = 80
 	icon = 'Oasis/icons/powerarmor/helmets/helmet_items.dmi'
 	alternate_worn_icon = 'Oasis/icons/powerarmor/helmets/helmets.dmi'
+	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SHOWEROKAY | SNUG_FIT
 
 	var/tier = POWER_ARMOR_GRADE_BASIC  // The tier of the helmet, needed for balance
 	var/armor_points = 60  // How much damage points the part absorbs until it's broken

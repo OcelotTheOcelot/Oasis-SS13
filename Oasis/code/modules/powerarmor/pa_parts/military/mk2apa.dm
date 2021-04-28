@@ -7,6 +7,7 @@
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.4
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	render_priority = 5
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 140
@@ -23,6 +24,7 @@
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.3
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 120
 	armor_points = 100
@@ -36,6 +38,7 @@
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.3
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 120
 	armor_points = 100
@@ -50,6 +53,7 @@
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.3
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	render_priority = 0
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 120
@@ -65,6 +69,7 @@
 		/obj/item/stack/sheet/iron = 0.4
 	)
 	slowdown = 0.3
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	render_priority = 0
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 120

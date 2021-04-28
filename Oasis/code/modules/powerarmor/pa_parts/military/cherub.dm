@@ -4,6 +4,7 @@
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
 	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 1
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	render_priority = 5
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 220
@@ -17,6 +18,7 @@
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
 	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 0.8
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 170
 	armor_points = 150
@@ -27,6 +29,7 @@
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
 	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 0.8
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 170
 	armor_points = 150
@@ -37,6 +40,7 @@
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
 	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 0.8
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	render_priority = 0
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 170
@@ -48,6 +52,7 @@
 	icon = 'Oasis/icons/powerarmor/pa_parts/cherub.dmi'
 	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	slowdown = 0.8
+	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	render_priority = 0
 	tier = POWER_ARMOR_GRADE_MILITARY
 	max_integrity = 170

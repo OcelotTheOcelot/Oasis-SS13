@@ -36,8 +36,7 @@
 
 	slowdown = 0.2  // How much does this part add to the exosuit slowdown; this variable is already defined in the item.dm but used only for equipment
 	var/eqipment_delay = 5  // How much does this part add to the exosuit eqipment_delay
-	var/datum/component/power_armor_set_bonus/set_bonus  // Type of component responsible for handling full set bonus 
-	var/airtight = FALSE  // Wheter this part protects the limb from space or not <TODO> still unused, may be should be removed
+	var/list/set_bonuses = new  // Type of components responsible for handling full set bonuses
 	var/pauldron_compatible = TRUE  // If this part can be attached to an exoskeleton with pauldrons; intended to be used with arms, but transfered to their parent for better compatibility
 
 	// List of materials needed to repair the part and their coefficients (armor_points_per_sheet multiplier)
