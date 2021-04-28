@@ -50,3 +50,7 @@ A complete set of suit parts is needed in order to provide robust protection fro
 	icon = 'Oasis/icons/powerarmor/pa_parts/pcs.dmi'
 	slowdown = 0.2
 	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
+
+/datum/component/power_armor_set_bonus/armor/pcs
+	desc = "Full set of PCS parts provides you string protection against radiation and heat."
+	additional_armor = list("melee" = 0, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 80, "rad" = 80, "fire" = 80, "acid" = 50)

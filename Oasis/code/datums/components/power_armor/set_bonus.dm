@@ -62,8 +62,39 @@ Accepts:
 
 /datum/component/power_armor_set_bonus/spaceworthy/activate()
 	..()
-	parent_as_exoskeleton()?.clothing_flags |= clothing_flags_to_add
+	var/obj/item/clothing/suit/armor/exoskeleton/E = parent
+	if(!istype(E))
+		return
+	E.clothing_flags |= clothing_flags_to_add
+	E.cold_protection = CHEST | GROIN | LEGS | FEET | ARMS | HANDS
+	E.heat_protection = CHEST | GROIN | LEGS | FEET | ARMS | HANDS
 
 /datum/component/power_armor_set_bonus/spaceworthy/deactivate()
 	..()
-	parent_as_exoskeleton()?.clothing_flags &= ~clothing_flags_to_add
+	var/obj/item/clothing/suit/armor/exoskeleton/E = parent
+	if(!istype(E))
+		return
+	E.clothing_flags &= ~clothing_flags_to_add
+	E.cold_protection = 0
+	E.heat_protection = 0
+
+/datum/component/power_armor_set_bonus/armor
+	var/additional_armor = list("melee" = 0, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+
+/datum/component/power_armor_set_bonus/armor/activate()
+	..()
+	var/obj/item/clothing/suit/armor/exoskeleton/E = parent
+	if(!istype(E))
+		return
+	E.rad_flags |= RAD_PROTECT_CONTENTS
+	for(var/type in additional_armor)
+		E.armor[type] = (E.armor[type] || 0) + additional_armor[type]  // Unlike +=, it's failsafe
+
+/datum/component/power_armor_set_bonus/armor/deactivate()
+	..()
+	var/obj/item/clothing/suit/armor/exoskeleton/E = parent
+	if(!istype(E))
+		return
+	E.rad_flags &= ~RAD_PROTECT_CONTENTS
+	for(var/type in additional_armor)
+		E.armor[type] = (E.armor[type] || 0) - additional_armor[type]

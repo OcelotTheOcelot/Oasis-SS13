@@ -30,6 +30,9 @@ Credits:
 	pocket_storage_component_path = null
 	allowed = list()
 	density = TRUE
+	
+	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
+	max_heat_protection_temperature = SPACE_SUIT_MAX_TEMP_PROTECT
 
 	w_class = WEIGHT_CLASS_GIGANTIC
 	slowdown = 1
@@ -400,12 +403,18 @@ The mutable_appearance's are extracted from power_armor_overlays.
 
 	var/list/overlays_to_render = new
 	overlays_to_render |= power_armor_overlays
+
 	// Ikr this is not the most exemplary piece of code
 	for(var/part_slot in (exoskeleton_overlays - parts - "[EXOSKELETON_SLOT_TORSO]_opened"))
 		if(part_slot == EXOSKELETON_SLOT_TORSO && panel_opened)
 			overlays_to_render += exoskeleton_overlays["[EXOSKELETON_SLOT_TORSO]_opened"]
 			continue
 		overlays_to_render += exoskeleton_overlays[part_slot]
+
+	var/obj/item/clothing/head/helmet/power_armor/helmet = get_helmet()
+	if(helmet)
+		overlays_to_render |= helmet.power_armor_overlays
+
 	for(var/datum/power_armor_overlay/PAO in sortTim(overlays_to_render, cmp = /proc/cmp_power_armor_overlays_render_order, associative = FALSE))
 		appearances += PAO.appearance
 

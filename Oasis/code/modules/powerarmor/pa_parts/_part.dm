@@ -368,7 +368,7 @@ Returns:
 	icon_state = "l_arm_item"
 	part_icon_state = "l_arm"
 	render_priority = POWER_ARMOR_LAYER_ARMS
-	var/item_inhand_offsets = list("x" = 1, "y" = 2)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
+	var/item_inhand_offsets = list("x" = 0, "y" = 0)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
 
 /obj/item/power_armor_part/r_arm
 	slot = EXOSKELETON_SLOT_R_ARM
@@ -378,7 +378,7 @@ Returns:
 	icon_state = "r_arm_item"
 	part_icon_state = "r_arm"
 	render_priority = POWER_ARMOR_LAYER_ARMS
-	var/item_inhand_offsets = list("x" = 1, "y" = 2)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
+	var/item_inhand_offsets = list("x" = 0, "y" = 0)  // How many pixels the icon of the item held in the according hand is shifted on x and y axis
 
 /obj/item/power_armor_part/l_leg
 	slot = EXOSKELETON_SLOT_L_LEG

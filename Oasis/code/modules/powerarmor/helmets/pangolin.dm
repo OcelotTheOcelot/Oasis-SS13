@@ -4,6 +4,7 @@
 	An extremely durable helmet."
 	icon_state = "pangolin"
 	item_state = "pangolin"
+	tier = POWER_ARMOR_GRADE_MILITARY
 	set_bonus = /datum/component/power_armor_set_bonus/pangolin
 	max_integrity = 220
 	armor_points = 200

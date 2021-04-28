@@ -30,6 +30,17 @@
 		/obj/item/power_armor_part/r_leg/p5000pwl
 	)
 
+// pcs
+/obj/power_armor_assembled/pcs
+	part_types = list(
+		/obj/item/power_armor_part/l_arm/pcs,
+		/obj/item/power_armor_part/r_arm/pcs,
+		/obj/item/power_armor_part/torso/pcs,
+		/obj/item/power_armor_part/l_leg/pcs,
+		/obj/item/power_armor_part/r_leg/pcs
+	)
+	helmet_type = /obj/item/clothing/head/helmet/power_armor/pcs
+
 // praetor
 /obj/power_armor_assembled/praetor
 	part_types = list(

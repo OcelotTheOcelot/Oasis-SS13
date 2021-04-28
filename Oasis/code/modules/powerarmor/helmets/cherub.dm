@@ -4,6 +4,7 @@
 \"Cherub\" armor was designed with state of the art technologies, providing heavy protection at the cost of the wearers movement speed."
 	icon_state = "cherub"
 	item_state = "cherub"
+	tier = POWER_ARMOR_GRADE_MILITARY
 	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
 	max_integrity = 80
 	armor_points = 60

@@ -5,7 +5,13 @@
 	max_integrity = 80
 	icon = 'Oasis/icons/powerarmor/helmets/helmet_items.dmi'
 	alternate_worn_icon = 'Oasis/icons/powerarmor/helmets/helmets.dmi'
+
+	// PA helmets are space-worthy by default
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SHOWEROKAY | SNUG_FIT
+	cold_protection = HEAD
+	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
+	heat_protection = HEAD
+	max_heat_protection_temperature = SPACE_HELM_MAX_TEMP_PROTECT
 
 	var/tier = POWER_ARMOR_GRADE_BASIC  // The tier of the helmet, needed for balance
 	var/armor_points = 60  // How much damage points the part absorbs until it's broken
@@ -37,6 +43,10 @@
 /obj/item/clothing/head/helmet/power_armor/Initialize()
 	..()
 	worn_y_dimension += EXOSKELETON_ADDITIONAL_HEIGHT * 2
+	var/datum/power_armor_overlay/PAO = new
+	PAO.priority = POWER_ARMOR_LAYER_HELMET
+	PAO.appearance = mutable_appearance(alternate_worn_icon, icon_state)
+	power_armor_overlays += PAO
 
 /obj/item/clothing/head/helmet/power_armor/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	if(!..() || !ishuman(M))
@@ -65,8 +75,7 @@
 		on_wearer_entered(user)
 		for(var/M in modules)
 			modules[M].on_wearer_entered(user)
-
-	synchronize_with_exoskeleton(user.get_item_by_slot(ITEM_SLOT_OCLOTHING))
+		synchronize_with_exoskeleton(user.get_item_by_slot(ITEM_SLOT_OCLOTHING))
 
 /obj/item/clothing/head/helmet/power_armor/dropped(mob/living/user)
 	if(is_equipped(user))
@@ -87,6 +96,10 @@ Accepts:
 		return
 	src.exoskeleton = exoskeleton
 	exoskeleton.update_set_bonuses()
+	exoskeleton.update_appearances()
+	alternate_worn_icon = null
+	wearer?.update_inv_head()
+	wearer?.update_inv_wear_suit()
 
 /* Desynchronize with exosketon
 Cancels changes made by synchronize_with_exoskeleton
@@ -94,6 +107,9 @@ Cancels changes made by synchronize_with_exoskeleton
 /obj/item/clothing/head/helmet/power_armor/proc/desynchronize_with_exoskeleton()
 	exoskeleton = null
 	exoskeleton.update_set_bonuses()
+	exoskeleton.update_appearances()
+	alternate_worn_icon = initial(alternate_worn_icon)
+	wearer?.update_inv_wear_suit()
 
 /* Is equipped
 Helper proc used to determine if the helmet is equipped by the wearer.
