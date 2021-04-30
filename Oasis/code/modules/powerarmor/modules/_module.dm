@@ -21,6 +21,8 @@
 
 	var/list/module_actions = new  // List of actions that this module provides
 
+	var/emp_reaction_chance = 60  // How likely is EMPs to cause this module's reaction
+
 /obj/item/power_armor_module/examine(mob/user)
 	. = ..()
 	switch(tier)
@@ -48,12 +50,15 @@
 			QDEL_NULL(power_armor_overlays[part_slot])
 	..()
 
+/obj/item/power_armor_module/emp_act(severity)
+	if(prob(emp_reaction_chance))
+		emp_reaction()
+
 /* EMP reaction
 Called when the exoskeleton is getting EMPed.
 */
 /obj/item/power_armor_module/proc/emp_reaction()
 	return
-
 
 /* Get overlays for part slot
 This proc is used to get matching overlays for parts, e.g. r_arm icon state for right arms.

@@ -55,9 +55,8 @@
 
 /obj/item/power_armor_part/Destroy()
 	exoskeleton?.detach_part(slot)
-	var/obj/item/power_armor_module/M
-	for(M in modules)
-		QDEL_NULL(M)
+	for(var/M in modules)
+		QDEL_NULL(modules[M])
 	return ..()
 
 /obj/item/power_armor_part/examine(mob/user)
@@ -328,6 +327,10 @@ Returns:
 			broken = FALSE
 			set_limb_disabled(FALSE)
 	return obj_integrity - previous_integrity
+
+/obj/item/power_armor_part/emp_act(severity)
+	for(var/M in modules)
+		modules[M]?.emp_act(severity)
 
 /obj/item/power_armor_part/torso
 	slot = EXOSKELETON_SLOT_TORSO

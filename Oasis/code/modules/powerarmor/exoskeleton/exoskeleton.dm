@@ -6,7 +6,7 @@ Credits:
 	TottalyNotC
 		for his balance recommendations, sprites and concepts;
 	NDHavch1k
-		for his balance recommendations, sprites and code;
+		for his balance recommendations, sprites and code for some (actually, 1) modules;
 */
 
 /obj/item/clothing/suit/armor/exoskeleton
@@ -49,6 +49,9 @@ Credits:
 	var/step_power_consumption = 5  // How much power is drained when the wearer moves
 	var/additive_slowdown  // How much the attached parts should slow the user down
 	var/eqipment_delay = 0  // How much time it takes to equip the exoskeleton
+
+	var/emp_stun_amount = 100  // Maximal amount of time the wearer will be stunned by EMP
+	var/emp_stun_chance = 60  // Maximal chance of getting stunned by EMP
 
 	var/list/parts = new  // This list contains all the parts attached to the exoskeleton
 	var/list/appearances = new  // This list contains all the overlays to be rendered, not to be mistaken with power_armor_overlays
@@ -554,6 +557,16 @@ Applies and removes armor set bonuses regarding the amount of parts from one set
 		if(sets[set_type] >= initial(SB.amount_for_full_set))
 			var/new_bonus = AddComponent(set_type)
 			set_bonuses.Add(new_bonus)
+
+/obj/item/clothing/suit/armor/exoskeleton/emp_act(severity)
+	. = ..()
+	// wearer?.emp_act(severity)
+	if(prob(emp_stun_chance/severity))
+		if(wearer)
+			to_chat(wearer, "<span class='userdanger'>Servos of \the [src] jam for a moment, making you unable to move and maintain balance!</span>")
+		wearer.Stun(emp_stun_amount/severity)
+	for(var/P in parts)
+		parts[P].emp_act(severity)
 
 /obj/item/clothing/suit/armor/exoskeleton/attackby(obj/item/W, mob/user, params)
 	var/equipped = is_equipped(user)
