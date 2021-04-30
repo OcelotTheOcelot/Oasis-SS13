@@ -652,7 +652,7 @@
 /datum/supply_pack/security/armory/russian
 	name = "Russian Surplus Crate"
 	desc = "Hello Comrade, we have the most modern russian military equipment the black market can offer, for the right price of course. Sadly we couldnt remove the lock so it requires Armory access to open."
-	cost = 4500
+	cost = 4000
 	contraband = TRUE
 	contains = list(/obj/item/reagent_containers/food/snacks/rationpack,
 					/obj/item/ammo_box/a762,
@@ -668,18 +668,23 @@
 					/obj/item/clothing/suit/armor/vest/russian_coat,
 					/obj/item/gun/ballistic/rifle/boltaction,
 					/obj/item/gun/ballistic/rifle/boltaction,
-					/obj/item/power_armor_part/l_arm/samovar,
-					/obj/item/power_armor_part/r_arm/samovar,
-					/obj/item/power_armor_part/torso/samovar,
-					/obj/item/power_armor_part/l_leg/samovar,
-					/obj/item/power_armor_part/r_leg/samovar,
-					/obj/item/clothing/head/helmet/power_armor/samovar
 					)
 	crate_name = "surplus military crate"
+	var/rare_loot_chance = 40
+	var/rare_loot = list(/obj/item/power_armor_part/l_arm/samovar,
+					     /obj/item/power_armor_part/r_arm/samovar,
+					     /obj/item/power_armor_part/torso/samovar,
+					     /obj/item/power_armor_part/l_leg/samovar,
+					     /obj/item/power_armor_part/r_leg/samovar,
+					     /obj/item/clothing/head/helmet/power_armor/samovar
+						 )
 
 /datum/supply_pack/security/armory/russian/fill(obj/structure/closet/crate/C)
-	for(var/i in 1 to 12)
+	for(var/i in 1 to 10)
 		var/item = pick(contains)
+		new item(C)
+	if(prob(rare_loot_chance))
+		var/item = pick(rare_loot)
 		new item(C)
 
 /datum/supply_pack/security/armory/smartmine
