@@ -6,6 +6,6 @@
 	item_state = "cherub"
 	tier = POWER_ARMOR_GRADE_MILITARY
 	repair_materials = list(/obj/item/stack/sheet/mineral/titanium = 1)
-	max_integrity = 80
-	armor_points = 60
+	max_integrity = 170
+	armor_points = 150
 	flash_protect = 1

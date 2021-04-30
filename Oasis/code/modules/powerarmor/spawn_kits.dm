@@ -30,17 +30,6 @@
 		/obj/item/power_armor_part/r_leg/p5000pwl
 	)
 
-// pcs
-/obj/power_armor_assembled/pcs
-	part_types = list(
-		/obj/item/power_armor_part/l_arm/pcs,
-		/obj/item/power_armor_part/r_arm/pcs,
-		/obj/item/power_armor_part/torso/pcs,
-		/obj/item/power_armor_part/l_leg/pcs,
-		/obj/item/power_armor_part/r_leg/pcs
-	)
-	helmet_type = /obj/item/clothing/head/helmet/power_armor/pcs
-
 // praetor
 /obj/power_armor_assembled/praetor
 	part_types = list(
@@ -52,6 +41,28 @@
 	)
 	helmet_type = /obj/item/clothing/head/helmet/power_armor/praetor
 
+// pcs
+/obj/power_armor_assembled/pcs
+	part_types = list(
+		/obj/item/power_armor_part/l_arm/pcs,
+		/obj/item/power_armor_part/r_arm/pcs,
+		/obj/item/power_armor_part/torso/pcs,
+		/obj/item/power_armor_part/l_leg/pcs,
+		/obj/item/power_armor_part/r_leg/pcs
+	)
+	helmet_type = /obj/item/clothing/head/helmet/power_armor/pcs
+
+// mk2pcs
+/obj/power_armor_assembled/mk2pcs
+	part_types = list(
+		// /obj/item/power_armor_part/l_arm/mk2pcs,
+		// /obj/item/power_armor_part/r_arm/mk2pcs,
+		// /obj/item/power_armor_part/torso/mk2pcs,
+		// /obj/item/power_armor_part/l_leg/mk2pcs,
+		// /obj/item/power_armor_part/r_leg/mk2pcs
+	)
+	helmet_type = /obj/item/clothing/head/helmet/power_armor/mk2pcs
+
 // mk2apa
 /obj/power_armor_assembled/mk2apa
 	exoskeleton_type = /obj/item/clothing/suit/armor/exoskeleton/military
@@ -62,7 +73,7 @@
 		/obj/item/power_armor_part/l_leg/mk2apa,
 		/obj/item/power_armor_part/r_leg/mk2apa
 	)
-	// helmet_type = /obj/item/clothing/head/helmet/power_armor/mk2apa
+	helmet_type = /obj/item/clothing/head/helmet/power_armor/mk2apa
 
 // cherub
 /obj/power_armor_assembled/cherub
@@ -86,7 +97,7 @@
 		/obj/item/power_armor_part/l_leg/samovar,
 		/obj/item/power_armor_part/r_leg/samovar
 	)
-	// helmet_type = /obj/item/clothing/head/helmet/power_armor/samovar
+	helmet_type = /obj/item/clothing/head/helmet/power_armor/samovar
 
 // pangolin
 /obj/power_armor_assembled/pangolin
@@ -98,4 +109,4 @@
 		/obj/item/power_armor_part/l_leg/pangolin,
 		/obj/item/power_armor_part/r_leg/pangolin
 	)
-	// helmet_type = /obj/item/clothing/head/helmet/power_armor/pangolin
+	helmet_type = /obj/item/clothing/head/helmet/power_armor/pangolin

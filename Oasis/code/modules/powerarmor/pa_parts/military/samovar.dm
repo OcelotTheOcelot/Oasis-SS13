@@ -21,7 +21,7 @@ The origin of this armor is unknown. The most obvious guess would be that these 
 	slowdown = 1
 	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
-	max_integrity = 180
+	max_integrity = 220
 	armor_points = 200
 
 /obj/item/power_armor_part/r_arm/samovar
@@ -33,7 +33,7 @@ The origin of this armor is unknown. The most obvious guess would be that these 
 	slowdown = 1
 	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
-	max_integrity = 180
+	max_integrity = 220
 	armor_points = 200
 
 /obj/item/power_armor_part/l_leg/samovar
@@ -45,7 +45,7 @@ The origin of this armor is unknown. The most obvious guess would be that these 
 	slowdown = 1
 	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
-	max_integrity = 180
+	max_integrity = 220
 	armor_points = 200
 
 /obj/item/power_armor_part/r_leg/samovar
@@ -57,5 +57,5 @@ The origin of this armor is unknown. The most obvious guess would be that these 
 	slowdown = 1
 	set_bonuses = list(/datum/component/power_armor_set_bonus/spaceworthy)
 	tier = POWER_ARMOR_GRADE_MILITARY
-	max_integrity = 180
+	max_integrity = 220
 	armor_points = 200

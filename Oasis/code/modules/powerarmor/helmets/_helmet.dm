@@ -150,3 +150,51 @@ Accepts:
 		user.get_bodypart(protected_bodyzone)?.GetComponent(/datum/component/power_armor_damage_interceptor)?.RemoveComponent()
 	for(var/M in modules)
 		modules[M]?.on_wearer_left(user)
+
+// Repair mechanics mostly duplicate _part.dm code
+/obj/item/clothing/head/helmet/power_armor/attackby(obj/item/W, mob/user, params)
+	for(var/material_type in repair_materials)
+		if(!istype(W, material_type))
+			continue
+		if(exoskeleton?.wearer == user)
+			to_chat(user, "<span class='warning'>You can't repair armor while wearing it!</span>")
+			return
+		if(max_integrity == obj_integrity)
+			to_chat(user, "<span class='notice'>\The [src] is already intact.</span>")
+			return
+		var/obj/item/stack/sheet/S = W
+		var/to_repair = CLAMP(S.amount * armor_points_per_sheet * (repair_materials[material_type] || 1), 0, max_integrity - obj_integrity)
+		var/fuel_to_use = to_repair * POWER_ARMOR_REPAIR_FUEL_CONSUMPTION
+		var/obj/item/welder = find_tool(user, TOOL_WELDER)
+		if(!welder)
+			to_chat(user, "<span class='warning'>You need a working welding tool to repair \the [src]!</span>")
+			return
+		if(!welder.tool_start_check(user, fuel_to_use))
+			return
+		if(do_after(user, to_repair * POWER_ARMOR_REPAIR_TIME_MULTIPLIER, target = src))
+			welder = find_tool(user, TOOL_WELDER)
+			if(!welder) 
+				to_chat(user, "<span class='warning'>You need a working welding tool to repair \the [src]!</span>")
+				return
+			if(!welder.tool_start_check(user, fuel_to_use))
+				return
+
+			welder.use(fuel_to_use)
+			var/to_use = CEILING(repair(to_repair)/armor_points_per_sheet, 1)
+			S.use(to_use)
+			to_chat(user, "<span class='notice'>You repair \the [src] with [W].</span>")
+			return
+	return ..(W, user, params)
+
+/* Repair
+Repairs some amount of HPs of the helmet.
+Returns:
+	the amount of HPs restored
+*/
+/obj/item/clothing/head/helmet/power_armor/proc/repair(amount)
+	var/previous_integrity = obj_integrity
+	obj_integrity = CLAMP(obj_integrity + amount, 0, max_integrity)
+	if(broken)
+		if(obj_integrity > (max_integrity - armor_points))
+			broken = FALSE
+	return obj_integrity - previous_integrity
