@@ -652,7 +652,7 @@
 /datum/supply_pack/security/armory/russian
 	name = "Russian Surplus Crate"
 	desc = "Hello Comrade, we have the most modern russian military equipment the black market can offer, for the right price of course. Sadly we couldnt remove the lock so it requires Armory access to open."
-	cost = 4000
+	cost = 4500
 	contraband = TRUE
 	contains = list(/obj/item/reagent_containers/food/snacks/rationpack,
 					/obj/item/ammo_box/a762,
@@ -667,11 +667,18 @@
 					/obj/item/clothing/head/helmet/rus_ushanka,
 					/obj/item/clothing/suit/armor/vest/russian_coat,
 					/obj/item/gun/ballistic/rifle/boltaction,
-					/obj/item/gun/ballistic/rifle/boltaction)
+					/obj/item/gun/ballistic/rifle/boltaction,
+					/obj/item/power_armor_part/l_arm/samovar,
+					/obj/item/power_armor_part/r_arm/samovar,
+					/obj/item/power_armor_part/torso/samovar,
+					/obj/item/power_armor_part/l_leg/samovar,
+					/obj/item/power_armor_part/r_leg/samovar,
+					/obj/item/clothing/head/helmet/power_armor/samovar
+					)
 	crate_name = "surplus military crate"
 
 /datum/supply_pack/security/armory/russian/fill(obj/structure/closet/crate/C)
-	for(var/i in 1 to 10)
+	for(var/i in 1 to 12)
 		var/item = pick(contains)
 		new item(C)
 
