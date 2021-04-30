@@ -57,7 +57,7 @@ Accepts:
 
 /datum/component/power_armor_set_bonus/spaceworthy
 	desc = "The set of airtight armor parts provides protection against low pressure environments."
-	amount_for_full_set = POWER_ARMOR_FULL_SET - 1  // Full set minus helmet
+	amount_for_full_set = POWER_ARMOR_SET_NO_HELMET
 	var/clothing_flags_to_add = STOPSPRESSUREDAMAGE | THICKMATERIAL | SHOWEROKAY  // What flags will be added to the exoskeleton when the bonus is active
 
 /datum/component/power_armor_set_bonus/spaceworthy/activate()

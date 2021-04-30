@@ -52,4 +52,5 @@
 #define POWER_ARMOR_REPAIR_TIME_MULTIPLIER	1
 #define POWER_ARMOR_REPAIR_FUEL_CONSUMPTION	0.1  // i.e. 1 unit of fuel per 10 armor points
 
-#define POWER_ARMOR_FULL_SET	6
+#define POWER_ARMOR_FULL_SET		6  // How many parts form a full set of armor
+#define POWER_ARMOR_SET_NO_HELMET	POWER_ARMOR_FULL_SET - 1  // How many parts form a full set of armor without helmet

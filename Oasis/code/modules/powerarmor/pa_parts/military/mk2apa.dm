@@ -75,3 +75,5 @@
 	max_integrity = 120
 	armor_points = 100
 
+/datum/component/power_armor_set_bonus/apc_recharge
+	desc = "Full set of Mk. II APA allows your suit to slowly recharge over time using APCs."
